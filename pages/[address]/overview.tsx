@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import WalletCard from "@components/WalletCard";
 import styles from "@styles/WalletOverview.module.css";
+import TabSelector from "../../components/TabSelector";
 
 const Home: NextPage = () => {
   return (
@@ -14,6 +15,9 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <WalletCard></WalletCard>
+        <div className={styles.tabSelectorContainer}>
+          <TabSelector></TabSelector>
+        </div>
       </main>
     </div>
   );
