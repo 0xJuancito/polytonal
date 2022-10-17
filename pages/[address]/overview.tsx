@@ -5,6 +5,7 @@ import styles from "@styles/WalletOverview.module.css";
 import TabSelector from "../../components/TabSelector";
 import PerformanceCard from "../../components/PerformanceCard";
 import HistoryCard from "../../components/HistoryCard";
+import AssetsCard from "../../components/AssetsCard";
 
 const Home: NextPage = () => {
   return (
@@ -23,6 +24,9 @@ const Home: NextPage = () => {
         <div className={styles.cardsContainer}>
           <PerformanceCard></PerformanceCard>
           <HistoryCard></HistoryCard>
+        </div>
+        <div className={styles.assetsCardContainer}>
+          <AssetsCard></AssetsCard>
         </div>
       </main>
     </div>
