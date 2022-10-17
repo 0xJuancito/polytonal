@@ -3,6 +3,7 @@ import Head from "next/head";
 import WalletCard from "@components/WalletCard";
 import styles from "@styles/WalletOverview.module.css";
 import TabSelector from "../../components/TabSelector";
+import PerformanceCard from "../../components/PerformanceCard";
 
 const Home: NextPage = () => {
   return (
@@ -17,6 +18,9 @@ const Home: NextPage = () => {
         <WalletCard></WalletCard>
         <div className={styles.tabSelectorContainer}>
           <TabSelector></TabSelector>
+        </div>
+        <div className={styles.cardsContainer}>
+          <PerformanceCard></PerformanceCard>
         </div>
       </main>
     </div>
