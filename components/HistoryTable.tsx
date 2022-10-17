@@ -5,7 +5,7 @@ import HistoryTableTx from "./HistoryTableTx";
 const tx: IHistoryTableTX = {
   action: "send",
   datetime: new Date("2022-10-17T13:24:08.049Z"),
-  fee: "0.00037 ETH ($0.56)",
+  fee: "0.00037",
   hash: "0xfbd4a7bf4d3757a17b313a00d4658306b19397d3d05f11c2292d244dd99b4691",
   erc20: {
     symbol: "USDC",

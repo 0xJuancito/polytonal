@@ -1,10 +1,27 @@
 .txContainer {
   display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.txContainer.active {
+  border-color: rgb(0, 163, 245);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.txMainContainer {
+  padding: 10px 16px;
+  display: flex;
   border-color: rgb(45, 45, 50);
   border-width: 1px;
   border-bottom-style: solid;
-  padding: 10px 16px;
-  height: 56px;
+}
+
+.txContainer.active .txMainContainer {
+  padding: 9px 15px 10px 15px;
 }
 
 .actionContainer {
@@ -19,7 +36,7 @@
   flex-direction: column;
 }
 
-.actionDate {
+.actionTime {
   color: rgb(134, 134, 134);
 }
 
@@ -72,4 +89,37 @@
   display: flex;
   align-items: center;
   width: 16px;
+}
+
+.txDetailContainer {
+  display: flex;
+  padding: 10px 16px;
+  gap: 36px;
+  padding: 10px 15px 10px 15px;
+}
+
+.fee {
+  color: rgb(134, 134, 134);
+}
+
+.txHashAddressContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.txHashContainer:hover {
+  text-decoration-line: underline;
+}
+
+.txHash {
+  color: rgb(134, 134, 134);
+}
+
+.txExternalLink {
+  padding: 0 5px;
+  border-radius: 2px;
+}
+
+.txHashContainer:hover .txExternalLink {
+  background-color: rgb(41, 41, 41);
 }
