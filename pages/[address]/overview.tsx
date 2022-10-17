@@ -6,6 +6,7 @@ import TabSelector from "../../components/TabSelector";
 import PerformanceCard from "../../components/PerformanceCard";
 import HistoryCard from "../../components/HistoryCard";
 import AssetsCard from "../../components/AssetsCard";
+import HistoryTable from "../../components/HistoryTable";
 
 const Home: NextPage = () => {
   return (
@@ -21,12 +22,17 @@ const Home: NextPage = () => {
         <div className={styles.tabSelectorContainer}>
           <TabSelector></TabSelector>
         </div>
-        <div className={styles.cardsContainer}>
-          <PerformanceCard></PerformanceCard>
-          <HistoryCard></HistoryCard>
+        <div className={styles.historyTableContainer}>
+          <HistoryTable></HistoryTable>
         </div>
-        <div className={styles.assetsCardContainer}>
-          <AssetsCard></AssetsCard>
+        <div>
+          <div className={styles.cardsContainer}>
+            <PerformanceCard></PerformanceCard>
+            <HistoryCard></HistoryCard>
+          </div>
+          <div className={styles.assetsCardContainer}>
+            <AssetsCard></AssetsCard>
+          </div>
         </div>
       </main>
     </div>

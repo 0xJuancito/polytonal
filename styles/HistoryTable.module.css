@@ -1,0 +1,105 @@
+.container {
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  letter-spacing: normal;
+}
+
+.container img {
+  border-radius: 50%;
+}
+
+.dayContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.dateContainer {
+  border-color: rgb(45, 45, 50);
+  border-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 12px;
+}
+
+.date {
+  color: rgb(206, 206, 206);
+  font-weight: 500px;
+}
+
+.txContainer {
+  display: flex;
+  border-color: rgb(45, 45, 50);
+  border-width: 1px;
+  border-bottom-style: solid;
+  padding: 10px 16px;
+  height: 56px;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 30%;
+}
+
+.actionDetailContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.actionDate {
+  color: rgb(134, 134, 134);
+}
+
+.tokenRecipientContainer {
+  flex: 1 1 0%;
+  display: flex;
+  align-items: center;
+}
+
+.tokenContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.tokenDetailContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.tokenValue {
+  color: rgb(134, 134, 134);
+}
+
+.recipientContainer {
+  display: flex;
+  flex-direction: column;
+  color: rgb(206, 206, 206);
+  font-size: 12px;
+  margin-left: auto;
+  margin-right: 10px;
+  gap: 3px;
+}
+
+.recipientText {
+  margin-left: 8px;
+}
+
+.recipientAddressContainer {
+  display: flex;
+  gap: 10px;
+  background-color: rgb(35, 35, 35);
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.recipientAddressImageContainer {
+  display: flex;
+  align-items: center;
+  width: 16px;
+}
