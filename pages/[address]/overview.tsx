@@ -10,7 +10,7 @@ import HistoryTable from "../../components/HistoryTable";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className={styles.page}>
       <Head>
         <title>Wallet Overview</title>
         <meta name="description" content="Wallet Overview" />

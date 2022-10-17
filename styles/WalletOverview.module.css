@@ -1,5 +1,11 @@
+.page {
+  display: flex;
+  justify-content: center;
+}
+
 .main {
   padding: 25px 35px;
+  max-width: 930px;
 }
 
 .tabSelectorContainer {
