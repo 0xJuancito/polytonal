@@ -8,7 +8,7 @@ import HistoryCard from "../../components/HistoryCard";
 import AssetsCard from "../../components/AssetsCard";
 import HistoryTable from "../../components/HistoryTable";
 
-const Home: NextPage = () => {
+const Overview: NextPage = () => {
   return (
     <div className={styles.page}>
       <Head>
@@ -39,4 +39,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Overview;
