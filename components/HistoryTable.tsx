@@ -20,11 +20,19 @@ const tx: IHistoryTableTX = {
 };
 
 const HistoryTable = () => {
+  const formatDate = (datetime: Date) => {
+    return datetime.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.dayContainer}>
         <div className={styles.dateContainer}>
-          <div className={styles.date}>September 1, 2022</div>
+          <div className={styles.date}>{formatDate(tx.datetime)}</div>
         </div>
         <HistoryTableTx tx={tx}></HistoryTableTx>
       </div>
