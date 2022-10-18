@@ -1,8 +1,11 @@
+import { HttpProvider } from "@harmony-js/network";
+import { HRC721, Key } from "harmony-marketplace-sdk";
 import styles from "@styles/HistoryTableTx.module.css";
 import { IHistoryTableTX } from "@lib/types";
 import Image from "next/image";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Identicon from "react-identicons";
+import ABI from "@lib/abis/hrc721.json";
 
 interface Props {
   tx: IHistoryTableTX;
@@ -11,6 +14,39 @@ interface Props {
 
 const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   const [active, setActive] = useState(false);
+  const [nftImage, setNftImage] = useState("/nft.webp");
+  const [nftUri, setNftUri] = useState("");
+  const [loadingNft, setLoadingNft] = useState(false);
+
+  useEffect(() => {
+    if (!tx.nft || loadingNft) {
+      return;
+    }
+    setLoadingNft(true);
+
+    const key = new Key(new HttpProvider("https://api.harmony.one"));
+    const contract = new HRC721(tx.nft.contractAddress, ABI, key);
+
+    let url = "";
+    contract
+      .tokenURI(tx.nft.tokenId)
+      .then((uri) => {
+        url = uri;
+        return fetch(uri);
+      })
+      .then(async (response) => {
+        const data = await response.json();
+        const imageUrl = data.image;
+        if (imageUrl) {
+          setNftUri(url);
+          setNftImage(imageUrl);
+          setLoadingNft(false);
+        }
+      })
+      .catch(() => {
+        setLoadingNft(false);
+      });
+  }, []);
 
   const getActionIcon = () => {
     let icon = "";
@@ -31,7 +67,6 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     let action = tx.action;
 
     if (tx.action === "Transfer") {
-      console.log(walletAddress);
       action = sameAddress(tx.recipient.from, walletAddress)
         ? "Send"
         : "Receive";
@@ -220,9 +255,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
         </div>
 
         <div className={styles.tokenRecipientContainer}>
-          {tx.action !== "Transfer" || tx.nft ? (
-            ""
-          ) : (
+          {tx.action === "Transfer" && tx.hrc20 ? (
             <div className={styles.tokenContainer}>
               {getTokenSymbolImage()}
               <div className={styles.tokenDetailContainer}>
@@ -230,6 +263,48 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
                 <div className={styles.tokenValue}>{getPrice()}</div>
               </div>
             </div>
+          ) : (
+            ""
+          )}
+          {tx.action === "Transfer" && tx.nft ? (
+            <a
+              className={
+                nftUri ? styles.nftTokenContainer : styles.tokenContainer
+              }
+              target={"_blank"}
+              rel={"noreferrer"}
+              href={nftUri}
+              onClick={(event) => {
+                if (nftUri) {
+                  event.stopPropagation();
+                } else {
+                  event.preventDefault();
+                }
+              }}
+            >
+              {loadingNft ? (
+                <div className={styles.ldsRipple}>
+                  <div></div>
+                  <div></div>
+                </div>
+              ) : (
+                <Image
+                  height="32"
+                  width="32"
+                  src={nftImage}
+                  alt="token"
+                  className={styles.nftImage}
+                ></Image>
+              )}
+              <div className={styles.tokenDetailContainer}>
+                <div className={getTokenDiffClass()}>
+                  {tx.nft?.collectionName} #{tx.nft?.tokenId}
+                </div>
+                <div className={styles.tokenValue}>{getPrice()}</div>
+              </div>
+            </a>
+          ) : (
+            ""
           )}
           <div className={styles.recipientContainer}>
             <a
