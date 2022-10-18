@@ -2,6 +2,7 @@ import styles from "@styles/HistoryTableTx.module.css";
 import { IHistoryTableTX } from "@lib/types";
 import Image from "next/image";
 import { FC, useState } from "react";
+import Identicon from "react-identicons";
 
 interface Props {
   tx: IHistoryTableTX;
@@ -220,13 +221,11 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
             <div className={styles.recipientText}>{getRecipientTitle()}</div>
             <div className={styles.recipientAddressContainer}>
               <div className={styles.recipientAddressImageContainer}>
-                <Image
-                  height="16"
-                  width="16"
-                  src={"/profile.png"}
-                  alt="profile"
+                <Identicon
+                  string={getRecipientAddress()}
                   className={styles.recipientAddressImage}
-                ></Image>
+                  size={"16"}
+                ></Identicon>
               </div>
               <div className={styles.recipientAddress}>
                 {getRecipientAddress()}

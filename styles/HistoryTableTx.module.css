@@ -107,6 +107,10 @@
   width: 16px;
 }
 
+.recipientAddressImage {
+  border-radius: 50%;
+}
+
 .txDetailContainer {
   display: flex;
   padding: 10px 16px;
