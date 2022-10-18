@@ -85,9 +85,17 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     const amount =
       hrc20Log.decoded.params.find((param) => param.name === "value")?.value ||
       "0";
-    const bigAmount = utils.parseEther(amount).div(BigNumber.from(10).pow(27));
-    const hrc20Symbol = hrc20Log.sender_contract_ticker_symbol;
+    const decimals = hrc20Log.sender_contract_decimals || 1;
+
+    let bigAmount: number | string = Number(amount) / Math.pow(10, decimals);
+    if (bigAmount < 10) {
+      bigAmount = bigAmount.toFixed(3);
+    } else {
+      bigAmount = bigAmount.toFixed(0);
+    }
+
     const hrc20Amount = bigAmount.toString();
+    const hrc20Symbol = hrc20Log.sender_contract_ticker_symbol;
     const hrc20Price = "";
 
     response.action = "Transfer";
@@ -161,7 +169,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
     let amount: number | string =
       Number(item.value) / Number(utils.parseEther("1"));
-    if (amount < 1) {
+    if (amount < 10) {
       amount = amount.toFixed(4);
     } else {
       amount = amount.toFixed(0);
