@@ -91,12 +91,17 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
       ? item.value_quote.toFixed(2).toString()
       : "";
 
-    const amount =
-      Number(item.value) / Number(utils.parseEther("1").toString());
+    let amount: number | string =
+      Number(item.value) / Number(utils.parseEther("1"));
+    if (amount < 1) {
+      amount = amount.toFixed(4);
+    } else {
+      amount = amount.toFixed(0);
+    }
 
     response.hrc20 = {
       symbol: "ONE",
-      amount: amount.toFixed(4).toString(),
+      amount: amount.toString(),
       price: valueQuote,
     };
 
