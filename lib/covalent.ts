@@ -49,16 +49,23 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     log.decoded.params.find((param) => param.name === "value")?.value || "0";
   const bigAmount = utils.parseEther(amount).div(BigNumber.from(10).pow(27));
 
+  const action = log.decoded.name;
+  const fee = (item.gas_spent / 1000000).toString();
+  const feePrice = ((item.gas_spent * item.gas_quote_rate) / 1000000).toFixed(
+    3
+  );
+  const datetime = item.block_signed_at.toString();
+
   return {
-    action: log.decoded.name,
-    datetime: item.block_signed_at.toString(),
-    fee: (item.gas_spent / 1000000).toString(),
-    feePrice: ((item.gas_spent * item.gas_quote_rate) / 1000000).toFixed(3),
+    action,
+    datetime,
+    fee,
+    feePrice,
     hash: item.tx_hash,
     erc20: {
       symbol: log.sender_contract_ticker_symbol,
       amount: bigAmount.toString(),
-      price: "N/A",
+      price: "",
     },
     // nft?: TxNftString,
     recipient: {

@@ -82,6 +82,9 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getPrice = () => {
+    if (!tx.erc20?.price) {
+      return "";
+    }
     return `$${tx.erc20?.price}`;
   };
 
@@ -90,7 +93,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       return "Application";
     }
 
-    if (tx.recipient.from === walletAddress) {
+    // show the other address
+    if (tx.recipient.to === walletAddress) {
       return "From";
     }
 
@@ -104,7 +108,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getRecipientAddress = () => {
-    if (tx.recipient.from === walletAddress) {
+    // show the other address
+    if (tx.recipient.to === walletAddress) {
       return shortenAddress(tx.recipient.from);
     }
 
