@@ -73,7 +73,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     const isValue = log.decoded.params.some((param) => param.name === "value");
     return isTransfer && toUser && isValue;
   });
-  if (hrc20Log) {
+  if (hrc20Log?.decoded) {
     const fromUser =
       hrc20Log.decoded.params.find((param) => param.name === "from")?.value ||
       "";
@@ -130,7 +130,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     return isTransfer && toUser && isNft;
   });
 
-  if (nftLog) {
+  if (nftLog?.decoded) {
     const fromUser =
       nftLog.decoded.params.find((param) => param.name === "from")?.value || "";
 

@@ -26,7 +26,7 @@ export interface TxLogEvent {
   sender_address_label?: any;
   sender_logo_url: string;
   raw_log_data: string;
-  decoded: TxDecoded;
+  decoded?: TxDecoded;
 }
 
 export interface TxItem {
