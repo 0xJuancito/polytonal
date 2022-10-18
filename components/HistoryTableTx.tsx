@@ -12,13 +12,15 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   const [active, setActive] = useState(false);
 
   const getActionIcon = () => {
-    const action = tx.recipient.to === walletAddress ? "Receive" : "Send";
+    let icon = "";
+    if (tx.action === "Transfer") {
+      icon =
+        tx.recipient.from === walletAddress
+          ? "/actions/send.svg"
+          : "/actions/receive.svg";
+    }
 
-    const actionTitles = new Map<string, string>([
-      ["Send", "/actions/send.svg"],
-      ["Receive", "/actions/receive.svg"],
-    ]);
-    return actionTitles.get(action) || "/actions/contract.svg";
+    return icon || "/actions/contract.svg";
   };
 
   const getActionTitle = () => {
@@ -38,11 +40,29 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     });
   };
 
-  const getTokenSymbol = (symbol = "") => {
+  const getTokenSymbolImage = (symbol = "") => {
     const actionTitles = new Map<string, string>([
       ["USDC", "/tokens/usdc.webp"],
     ]);
-    return actionTitles.get(tx.erc20?.symbol || "") || "/actions/contract.svg";
+    const icon = actionTitles.get(tx.erc20?.symbol || "");
+
+    if (icon) {
+      return (
+        <Image
+          height="32"
+          width="32"
+          src={icon}
+          alt="token"
+          className={styles.tokenImage}
+        ></Image>
+      );
+    }
+
+    return (
+      <div className={styles.defaultTokenIcon}>
+        <span>{tx.erc20?.symbol.toUpperCase().slice(0, 3)}</span>
+      </div>
+    );
   };
 
   const getTokenDiff = () => {
@@ -169,13 +189,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
         <div className={styles.tokenRecipientContainer}>
           <div className={styles.tokenContainer}>
-            <Image
-              height="32"
-              width="32"
-              src={getTokenSymbol()}
-              alt="token"
-              className={styles.tokenImage}
-            ></Image>
+            {getTokenSymbolImage()}
             <div className={styles.tokenDetailContainer}>
               <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
               <div className={styles.tokenValue}>{getPrice()}</div>
