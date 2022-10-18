@@ -44,7 +44,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     const actionTitles = new Map<string, string>([
       ["USDC", "/tokens/usdc.webp"],
     ]);
-    const icon = actionTitles.get(tx.erc20?.symbol || "");
+    const icon = actionTitles.get(tx.hrc20?.symbol || "");
 
     if (icon) {
       return (
@@ -60,7 +60,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
     return (
       <div className={styles.defaultTokenIcon}>
-        <span>{tx.erc20?.symbol.toUpperCase().slice(0, 3)}</span>
+        <span>{tx.hrc20?.symbol.toUpperCase().slice(0, 3)}</span>
       </div>
     );
   };
@@ -72,7 +72,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       sign = tx.recipient.from === walletAddress ? "-" : "+";
     }
 
-    return `${sign}${tx.erc20?.amount} ${tx.erc20?.symbol}`;
+    return `${sign}${tx.hrc20?.amount} ${tx.hrc20?.symbol}`;
   };
 
   const getTokenDiffClass = () => {
@@ -82,10 +82,10 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getPrice = () => {
-    if (!tx.erc20?.price) {
+    if (!tx.hrc20?.price) {
       return "";
     }
-    return `$${tx.erc20?.price}`;
+    return `$${tx.hrc20?.price}`;
   };
 
   const getRecipientTitle = () => {

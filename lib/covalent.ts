@@ -62,7 +62,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     fee,
     feePrice,
     hash: item.tx_hash,
-    erc20: {
+    hrc20: {
       symbol: log.sender_contract_ticker_symbol,
       amount: bigAmount.toString(),
       price: "",

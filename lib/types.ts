@@ -1,4 +1,4 @@
-export type TxErc20 = {
+export type TxHrc20 = {
   symbol: string;
   amount: string;
   price: string;
@@ -15,7 +15,7 @@ export type IHistoryTableTX = {
   fee: string;
   feePrice: string;
   hash: string;
-  erc20?: TxErc20;
+  hrc20?: TxHrc20;
   nft?: TxNft;
   recipient: {
     from: string;
