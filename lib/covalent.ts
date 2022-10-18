@@ -34,9 +34,10 @@ export const getTxs = async (
 
 const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   const fee = (item.gas_spent / 1000000).toString();
-  const feePrice = ((item.gas_spent * item.gas_quote_rate) / 10000000).toFixed(
-    4
-  );
+  const feePrice =
+    item.gas_spent && item.gas_quote_rate
+      ? ((item.gas_spent * item.gas_quote_rate) / 10000000).toFixed(4)
+      : "";
 
   const datetime = item.block_signed_at.toString();
 
@@ -56,6 +57,10 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
   // hrc20
   const hrc20Log = item.log_events.find((log) => {
+    if (!log.decoded) {
+      return null;
+    }
+
     const isTransfer = log.decoded.name === "Transfer";
     const toUser = log.decoded.params.some(
       (param) => param.name === "to" && param.value === address
@@ -81,15 +86,18 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   }
 
   // ONE
-  if (!item.log_events.length && item.gas_spent === 21000 && item.value_quote) {
-    console.log(item.value_quote, item.value);
+  if (!item.log_events.length && item.gas_spent === 21000) {
+    const valueQuote = item.value_quote
+      ? item.value_quote.toFixed(2).toString()
+      : "";
+
     const amount =
       Number(item.value) / Number(utils.parseEther("1").toString());
 
     response.hrc20 = {
       symbol: "ONE",
       amount: amount.toFixed(4).toString(),
-      price: item.value_quote.toFixed(2).toString(),
+      price: valueQuote,
     };
 
     response.action = "Transfer";

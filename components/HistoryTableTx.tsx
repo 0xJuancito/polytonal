@@ -62,7 +62,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
     return (
       <div className={styles.defaultTokenIcon}>
-        <span>{tx.hrc20?.symbol.toUpperCase().slice(0, 3)}</span>
+        <span>{tx.hrc20?.symbol?.toUpperCase()?.slice(0, 3)}</span>
       </div>
     );
   };
@@ -78,8 +78,11 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getTokenDiffClass = () => {
-    const netPositive =
-      tx.action === "Transfer" && tx.recipient.to === walletAddress;
+    if (tx.action !== "Transfer") {
+      return "";
+    }
+
+    const netPositive = tx.recipient.to === walletAddress;
     return netPositive ? styles.greenTokenDiff : "";
   };
 
@@ -123,7 +126,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getFee = () => {
-    return `${tx.fee} ONE ($${tx.feePrice})`;
+    const feePrice = tx.feePrice ? ` ($${tx.feePrice})` : "";
+    return `${tx.fee} ONE ${feePrice}`;
   };
 
   const getTxHash = () => {
@@ -195,13 +199,17 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
         </div>
 
         <div className={styles.tokenRecipientContainer}>
-          <div className={styles.tokenContainer}>
-            {getTokenSymbolImage()}
-            <div className={styles.tokenDetailContainer}>
-              <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
-              <div className={styles.tokenValue}>{getPrice()}</div>
+          {getActionTitle() === "Contract Execution" ? (
+            ""
+          ) : (
+            <div className={styles.tokenContainer}>
+              {getTokenSymbolImage()}
+              <div className={styles.tokenDetailContainer}>
+                <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
+                <div className={styles.tokenValue}>{getPrice()}</div>
+              </div>
             </div>
-          </div>
+          )}
           <div className={styles.recipientContainer}>
             <div className={styles.recipientText}>{getRecipientTitle()}</div>
             <div className={styles.recipientAddressContainer}>
