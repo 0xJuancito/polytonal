@@ -128,6 +128,12 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     return shortenAddress(tx.recipient.to);
   };
 
+  const getRecipientFullAddress = () => {
+    return tx.recipient.to === walletAddress
+      ? tx.recipient.from
+      : tx.recipient.to;
+  };
+
   const toggleActive = () => {
     setActive(!active);
   };
@@ -143,6 +149,10 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
   const getExternalTxLink = () => {
     return `https://explorer.harmony.one/tx/${tx.hash}`;
+  };
+
+  const getExternalAddressLink = () => {
+    return `https://explorer.harmony.one/address/${getRecipientFullAddress()}`;
   };
 
   const getTxDetail = () => {
@@ -218,19 +228,27 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
             </div>
           )}
           <div className={styles.recipientContainer}>
-            <div className={styles.recipientText}>{getRecipientTitle()}</div>
-            <div className={styles.recipientAddressContainer}>
-              <div className={styles.recipientAddressImageContainer}>
-                <Identicon
-                  string={getRecipientAddress()}
-                  className={styles.recipientAddressImage}
-                  size={"16"}
-                ></Identicon>
+            <a
+              className={styles.recipientInnerContainer}
+              target={"_blank"}
+              rel={"noreferrer"}
+              href={getExternalAddressLink()}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className={styles.recipientText}>{getRecipientTitle()}</div>
+              <div className={styles.recipientAddressContainer}>
+                <div className={styles.recipientAddressImageContainer}>
+                  <Identicon
+                    string={getRecipientFullAddress()}
+                    className={styles.recipientAddressImage}
+                    size={"16"}
+                  ></Identicon>
+                </div>
+                <div className={styles.recipientAddress}>
+                  {getRecipientAddress()}
+                </div>
               </div>
-              <div className={styles.recipientAddress}>
-                {getRecipientAddress()}
-              </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>

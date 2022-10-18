@@ -89,6 +89,11 @@
   gap: 3px;
 }
 
+.recipientInnerContainer:hover {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
+
 .recipientText {
   margin-left: 8px;
 }
@@ -109,6 +114,7 @@
 
 .recipientAddressImage {
   border-radius: 50%;
+  background-color: rgb(134, 134, 134);
 }
 
 .txDetailContainer {
