@@ -68,8 +68,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
     if (tx.action === "Transfer") {
       action = sameAddress(tx.recipient.from, walletAddress)
-        ? "Send"
-        : "Receive";
+        ? "Sent"
+        : "Received";
 
       if (tx.nft) {
         action += " NFT";
