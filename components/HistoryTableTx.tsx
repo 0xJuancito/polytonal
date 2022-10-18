@@ -93,7 +93,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       return "";
     }
 
-    const netPositive = tx.recipient.to === walletAddress;
+    const netPositive = sameAddress(tx.recipient.to, walletAddress);
     return netPositive ? styles.greenTokenDiff : "";
   };
 
@@ -110,7 +110,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     }
 
     // show the other address
-    if (tx.recipient.to === walletAddress) {
+    if (sameAddress(tx.recipient.to, walletAddress)) {
       return "From";
     }
 
@@ -125,7 +125,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
   const getRecipientAddress = () => {
     // show the other address
-    if (tx.recipient.to === walletAddress) {
+    if (sameAddress(tx.recipient.to, walletAddress)) {
       return shortenAddress(tx.recipient.from);
     }
 
@@ -133,7 +133,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getRecipientFullAddress = () => {
-    return tx.recipient.to === walletAddress
+    return sameAddress(tx.recipient.to, walletAddress)
       ? tx.recipient.from
       : tx.recipient.to;
   };

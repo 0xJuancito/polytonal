@@ -67,15 +67,20 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
     const isTransfer = log.decoded.name === "Transfer";
     const toUser = log.decoded.params.some(
-      (param) => param.name === "to" && sameAddress(param.value, address)
+      (param) =>
+        (param.name === "to" && sameAddress(param.value, address)) ||
+        (param.name === "from" && sameAddress(param.value, address))
     );
-    const isNft = log.decoded.params.some((param) => param.name === "value");
-    return isTransfer && toUser;
+    const isValue = log.decoded.params.some((param) => param.name === "value");
+    return isTransfer && toUser && isValue;
   });
   if (hrc20Log) {
     const fromUser =
       hrc20Log.decoded.params.find((param) => param.name === "from")?.value ||
       "";
+
+    const toUser =
+      hrc20Log.decoded.params.find((param) => param.name === "to")?.value || "";
 
     const amount =
       hrc20Log.decoded.params.find((param) => param.name === "value")?.value ||
@@ -86,12 +91,19 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     const hrc20Price = "";
 
     response.action = "Transfer";
-    response.recipient.from = fromUser;
+    response.recipient.isContract = false;
     response.hrc20 = {
       symbol: hrc20Symbol,
       amount: hrc20Amount,
       price: hrc20Price,
     };
+
+    if (response.recipient.from !== address) {
+      response.recipient.from = fromUser;
+    }
+    if (response.recipient.to !== address) {
+      response.recipient.to = toUser;
+    }
   }
 
   // nft
@@ -131,12 +143,13 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
       contractAddress,
       collectionName,
     };
+    response.recipient.isContract = false;
 
     if (response.recipient.from !== address) {
       response.recipient.from = fromUser;
     }
     if (response.recipient.to !== address) {
-      response.recipient.to = fromUser;
+      response.recipient.to = toUser;
     }
   }
 
