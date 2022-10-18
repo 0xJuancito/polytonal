@@ -33,7 +33,6 @@ const Overview: NextPage = () => {
 
     fetch(`/api/tx/${queryAddress}`).then(async (response) => {
       const data = await response.json();
-      console.log(data);
       setTxs(data);
     });
   }, [router]);
@@ -52,7 +51,11 @@ const Overview: NextPage = () => {
           <TabSelector></TabSelector>
         </div>
         <div className={styles.historyTableContainer}>
-          {txs.length ? <HistoryTable txs={txs}></HistoryTable> : ""}
+          {txs.length ? (
+            <HistoryTable txs={txs} walletAddress={address}></HistoryTable>
+          ) : (
+            ""
+          )}
         </div>
         <div>
           <div className={styles.cardsContainer}>

@@ -50,7 +50,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   const bigAmount = utils.parseEther(amount).div(BigNumber.from(10).pow(27));
 
   return {
-    action: "receive",
+    action: log.decoded.name,
     datetime: item.block_signed_at.toString(),
     fee: (item.gas_spent / 1000000).toString(),
     feePrice: ((item.gas_spent * item.gas_quote_rate) / 1000000).toFixed(3),

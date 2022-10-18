@@ -10,9 +10,10 @@ interface TxDay {
 
 interface Props {
   txs: IHistoryTableTX[];
+  walletAddress: string;
 }
 
-const HistoryTable: FC<Props> = ({ txs }) => {
+const HistoryTable: FC<Props> = ({ txs, walletAddress }) => {
   const formatDate = (datetime: Date) => {
     return datetime.toLocaleDateString("en-US", {
       day: "numeric",
@@ -44,7 +45,11 @@ const HistoryTable: FC<Props> = ({ txs }) => {
             <div className={styles.date}>{txDay.date}</div>
           </div>
           {txDay.txs.map((tx, id) => (
-            <HistoryTableTx tx={tx} key={id}></HistoryTableTx>
+            <HistoryTableTx
+              tx={tx}
+              walletAddress={walletAddress}
+              key={id}
+            ></HistoryTableTx>
           ))}
         </div>
       ))}

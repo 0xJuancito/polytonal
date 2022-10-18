@@ -5,25 +5,30 @@ import { FC, useState } from "react";
 
 interface Props {
   tx: IHistoryTableTX;
+  walletAddress: string;
 }
 
-const HistoryTableTx: FC<Props> = ({ tx }) => {
+const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   const [active, setActive] = useState(false);
 
   const getActionIcon = () => {
+    const action = tx.recipient.to === walletAddress ? "Receive" : "Send";
+
     const actionTitles = new Map<string, string>([
-      ["send", "/actions/send.svg"],
-      ["receive", "/actions/receive.svg"],
+      ["Send", "/actions/send.svg"],
+      ["Receive", "/actions/receive.svg"],
     ]);
-    return actionTitles.get(tx.action) || "/actions/contract.svg";
+    return actionTitles.get(action) || "/actions/contract.svg";
   };
 
   const getActionTitle = () => {
-    const actionTitles = new Map<string, string>([
-      ["send", "Send"],
-      ["receive", "Receive"],
-    ]);
-    return actionTitles.get(tx.action) || "Contract Execution";
+    let action = tx.action;
+
+    if (tx.action === "Transfer") {
+      action = tx.recipient.from === walletAddress ? "Send" : "Receive";
+    }
+
+    return action || "Contract Execution";
   };
 
   const formatTime = () => {
@@ -41,15 +46,13 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   };
 
   const getTokenDiff = () => {
-    let text = "";
+    let sign = "";
 
-    if (tx.action === "send") {
-      text += "-";
+    if (tx.action === "Transfer") {
+      sign = tx.recipient.from === walletAddress ? "-" : "+";
     }
 
-    text = `${text}${tx.erc20?.amount} ${tx.erc20?.symbol}`;
-
-    return text;
+    return `${sign}${tx.erc20?.amount} ${tx.erc20?.symbol}`;
   };
 
   const getPrice = () => {
@@ -61,7 +64,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
       return "Application";
     }
 
-    if (tx.action === "receive") {
+    if (tx.recipient.from === walletAddress) {
       return "From";
     }
 
@@ -75,7 +78,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   };
 
   const getRecipientAddress = () => {
-    if (tx.action === "receive") {
+    if (tx.recipient.from === walletAddress) {
       return shortenAddress(tx.recipient.from);
     }
 
