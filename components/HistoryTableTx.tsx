@@ -220,7 +220,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
         </div>
 
         <div className={styles.tokenRecipientContainer}>
-          {getActionTitle() === "Contract Execution" || tx.nft ? (
+          {tx.action !== "Transfer" || tx.nft ? (
             ""
           ) : (
             <div className={styles.tokenContainer}>

@@ -51,7 +51,6 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     fee,
     feePrice,
     hash: item.tx_hash,
-    // nft?: TxNftString,
     recipient: {
       from: item.from_address,
       to: item.to_address,
@@ -183,6 +182,16 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
     response.action = "Transfer";
     response.recipient.isContract = false;
+  }
+
+  // Action
+  if (response.action === "Contract Execution") {
+    const action = item.log_events
+      .map((event) => event.decoded)
+      .find((decoded) => decoded.name)?.name;
+    if (action) {
+      response.action = action;
+    }
   }
 
   return response;
