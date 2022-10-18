@@ -188,7 +188,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   if (response.action === "Contract Execution") {
     const action = item.log_events
       .map((event) => event.decoded)
-      .find((decoded) => decoded.name)?.name;
+      .find((decoded) => decoded?.name)?.name;
     if (action) {
       response.action = action;
     }
