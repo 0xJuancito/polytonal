@@ -43,6 +43,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   const getTokenSymbolImage = (symbol = "") => {
     const actionTitles = new Map<string, string>([
       ["USDC", "/tokens/usdc.webp"],
+      ["ETH", "/tokens/eth.png"],
+      ["ONE", "/tokens/one.png"],
     ]);
     const icon = actionTitles.get(tx.hrc20?.symbol || "");
 
