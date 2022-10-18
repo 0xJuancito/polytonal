@@ -288,13 +288,13 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
                   <div></div>
                 </div>
               ) : (
-                <Image
+                <img
                   height="32"
                   width="32"
                   src={nftImage}
                   alt="token"
                   className={styles.nftImage}
-                ></Image>
+                ></img>
               )}
               <div className={styles.tokenDetailContainer}>
                 <div className={getTokenDiffClass()}>
