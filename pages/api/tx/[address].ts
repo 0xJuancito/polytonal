@@ -2,10 +2,10 @@ import { getTxs } from "@lib/covalent";
 import type { NextApiRequest, NextApiResponse } from "next";
 import Cache from "lru-cache";
 
-const ssrCache = new Cache({
-  max: 100,
-  ttl: 1000 * 60 * 60, // 1hour
-});
+// const ssrCache = new Cache({
+//   max: 100,
+//   ttl: 1000 * 60 * 60, // 1hour
+// });
 
 type Data = {
   name: string;
@@ -24,11 +24,11 @@ export default async function handler(
   const address =
     typeof queryAddress === "string" ? queryAddress : queryAddress[0];
 
-  if (ssrCache.has(address)) {
-    res.setHeader("x-cache", "HIT");
-    const response = ssrCache.get(address);
-    res.status(200).json(response as Data);
-  }
+  // if (ssrCache.has(address)) {
+  //   res.setHeader("x-cache", "HIT");
+  //   const response = ssrCache.get(address);
+  //   res.status(200).json(response as Data);
+  // }
 
   const tx = await getTxs(address);
 
