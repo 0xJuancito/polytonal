@@ -14,20 +14,26 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   const getActionIcon = () => {
     let icon = "";
     if (tx.action === "Transfer") {
-      icon =
-        tx.recipient.from === walletAddress
-          ? "/actions/send.svg"
-          : "/actions/receive.svg";
+      icon = sameAddress(tx.recipient.from, walletAddress)
+        ? "/actions/send.svg"
+        : "/actions/receive.svg";
     }
 
     return icon || "/actions/contract.svg";
+  };
+
+  const sameAddress = (address1: string, address2: string) => {
+    return address1.toUpperCase() === address2.toUpperCase();
   };
 
   const getActionTitle = () => {
     let action = tx.action;
 
     if (tx.action === "Transfer") {
-      action = tx.recipient.from === walletAddress ? "Send" : "Receive";
+      console.log(walletAddress);
+      action = sameAddress(tx.recipient.from, walletAddress)
+        ? "Send"
+        : "Receive";
     }
 
     return action || "Contract Execution";
@@ -71,7 +77,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     let sign = "";
 
     if (tx.action === "Transfer") {
-      sign = tx.recipient.from === walletAddress ? "-" : "+";
+      sign = sameAddress(tx.recipient.from, walletAddress) ? "-" : "+";
     }
 
     return `${sign}${tx.hrc20?.amount} ${tx.hrc20?.symbol}`;

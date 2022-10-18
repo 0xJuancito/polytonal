@@ -50,8 +50,8 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     // nft?: TxNftString,
     recipient: {
       from: item.from_address,
-      to: address,
-      isContract: false,
+      to: item.to_address,
+      isContract: true,
     },
   };
 
@@ -106,6 +106,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     };
 
     response.action = "Transfer";
+    response.recipient.isContract = false;
   }
 
   return response;
