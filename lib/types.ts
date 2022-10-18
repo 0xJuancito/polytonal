@@ -11,8 +11,9 @@ export type TxNft = {
 
 export type IHistoryTableTX = {
   action: string;
-  datetime: Date;
+  datetime: string;
   fee: string;
+  feePrice: string;
   hash: string;
   erc20?: TxErc20;
   nft?: TxNft;

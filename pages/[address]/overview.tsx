@@ -2,13 +2,42 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import WalletCard from "@components/WalletCard";
 import styles from "@styles/WalletOverview.module.css";
-import TabSelector from "../../components/TabSelector";
-import PerformanceCard from "../../components/PerformanceCard";
-import HistoryCard from "../../components/HistoryCard";
-import AssetsCard from "../../components/AssetsCard";
-import HistoryTable from "../../components/HistoryTable";
+import TabSelector from "@components/TabSelector";
+import PerformanceCard from "@components/PerformanceCard";
+import HistoryCard from "@components/HistoryCard";
+import AssetsCard from "@components/AssetsCard";
+import HistoryTable from "@components/HistoryTable";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Overview: NextPage = () => {
+  const router = useRouter();
+
+  const [txs, setTxs] = useState([]);
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    if (address) {
+      return;
+    }
+
+    let { address: queryAddress = "" } = router.query;
+    queryAddress =
+      typeof queryAddress === "string" ? queryAddress : queryAddress[0];
+
+    if (!queryAddress) {
+      return;
+    }
+
+    setAddress(queryAddress);
+
+    fetch(`/api/tx/${queryAddress}`).then(async (response) => {
+      const data = await response.json();
+      console.log(data);
+      setTxs(data);
+    });
+  }, [router]);
+
   return (
     <div className={styles.page}>
       <Head>
@@ -23,7 +52,7 @@ const Overview: NextPage = () => {
           <TabSelector></TabSelector>
         </div>
         <div className={styles.historyTableContainer}>
-          <HistoryTable></HistoryTable>
+          {txs.length ? <HistoryTable txs={txs}></HistoryTable> : ""}
         </div>
         <div>
           <div className={styles.cardsContainer}>

@@ -13,17 +13,21 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   const getActionIcon = () => {
     const actionTitles = new Map<string, string>([
       ["send", "/actions/send.svg"],
+      ["receive", "/actions/receive.svg"],
     ]);
     return actionTitles.get(tx.action) || "/actions/contract.svg";
   };
 
   const getActionTitle = () => {
-    const actionTitles = new Map<string, string>([["send", "Send"]]);
+    const actionTitles = new Map<string, string>([
+      ["send", "Send"],
+      ["receive", "Receive"],
+    ]);
     return actionTitles.get(tx.action) || "Contract Execution";
   };
 
   const formatTime = () => {
-    return tx.datetime.toLocaleTimeString("en-US", {
+    return new Date(tx.datetime).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -83,8 +87,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   };
 
   const getFee = () => {
-    const price = "0.70";
-    return `${tx.fee} ETH ($${price})`;
+    return `${tx.fee} ONE ($${tx.feePrice})`;
   };
 
   const getTxHash = () => {
