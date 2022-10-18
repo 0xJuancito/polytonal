@@ -89,6 +89,10 @@
   gap: 3px;
 }
 
+.recipientInnerContainer {
+  width: 125px;
+}
+
 .recipientInnerContainer:hover {
   cursor: pointer;
   text-decoration-line: underline;

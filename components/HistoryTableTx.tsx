@@ -35,6 +35,10 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       action = sameAddress(tx.recipient.from, walletAddress)
         ? "Send"
         : "Receive";
+
+      if (tx.nft) {
+        action += " NFT";
+      }
     }
 
     return action || "Contract Execution";
@@ -216,7 +220,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
         </div>
 
         <div className={styles.tokenRecipientContainer}>
-          {getActionTitle() === "Contract Execution" ? (
+          {getActionTitle() === "Contract Execution" || tx.nft ? (
             ""
           ) : (
             <div className={styles.tokenContainer}>

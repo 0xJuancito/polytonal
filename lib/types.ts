@@ -5,8 +5,9 @@ export type TxHrc20 = {
 };
 
 export type TxNft = {
-  name: string;
-  imageUrl: string;
+  tokenId: string;
+  contractAddress: string;
+  collectionName: string;
 };
 
 export type IHistoryTableTX = {

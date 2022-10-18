@@ -6,6 +6,10 @@ const APIKEY = process.env.COVALENT_API_KEY;
 const baseURL = "https://api.covalenthq.com/v1";
 const chainId = "1666600000";
 
+const sameAddress = (addr1: string, addr2: string) => {
+  return addr1.toLowerCase() === addr2.toLowerCase();
+};
+
 export const getTxs = async (
   address: string,
   pageNumber = 0,
@@ -63,11 +67,16 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
     const isTransfer = log.decoded.name === "Transfer";
     const toUser = log.decoded.params.some(
-      (param) => param.name === "to" && param.value === address
+      (param) => param.name === "to" && sameAddress(param.value, address)
     );
+    const isNft = log.decoded.params.some((param) => param.name === "value");
     return isTransfer && toUser;
   });
   if (hrc20Log) {
+    const fromUser =
+      hrc20Log.decoded.params.find((param) => param.name === "from")?.value ||
+      "";
+
     const amount =
       hrc20Log.decoded.params.find((param) => param.name === "value")?.value ||
       "0";
@@ -76,13 +85,59 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     const hrc20Amount = bigAmount.toString();
     const hrc20Price = "";
 
-    response.action = hrc20Log.decoded.name;
-
+    response.action = "Transfer";
+    response.recipient.from = fromUser;
     response.hrc20 = {
       symbol: hrc20Symbol,
       amount: hrc20Amount,
       price: hrc20Price,
     };
+  }
+
+  // nft
+  const nftLog = item.log_events.find((log) => {
+    if (!log.decoded) {
+      return null;
+    }
+
+    const isTransfer = log.decoded.name === "Transfer";
+    const toUser = log.decoded.params.some(
+      (param) =>
+        (param.name === "to" && sameAddress(param.value, address)) ||
+        (param.name === "from" && sameAddress(param.value, address))
+    );
+    const isNft = log.decoded.params.some((param) => param.name === "tokenId");
+
+    return isTransfer && toUser && isNft;
+  });
+
+  if (nftLog) {
+    const fromUser =
+      nftLog.decoded.params.find((param) => param.name === "from")?.value || "";
+
+    const toUser =
+      nftLog.decoded.params.find((param) => param.name === "to")?.value || "";
+
+    const tokenId =
+      nftLog.decoded.params.find((param) => param.name === "tokenId")?.value ||
+      "";
+
+    const contractAddress = nftLog.sender_address;
+    const collectionName = nftLog.sender_name;
+
+    response.action = "Transfer";
+    response.nft = {
+      tokenId,
+      contractAddress,
+      collectionName,
+    };
+
+    if (response.recipient.from !== address) {
+      response.recipient.from = fromUser;
+    }
+    if (response.recipient.to !== address) {
+      response.recipient.to = fromUser;
+    }
   }
 
   // ONE
