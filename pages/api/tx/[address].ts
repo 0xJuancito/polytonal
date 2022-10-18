@@ -7,18 +7,14 @@ import Cache from "lru-cache";
 //   ttl: 1000 * 60 * 60, // 1hour
 // });
 
-type Data = {
-  name: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<any>
 ) {
   const { address: queryAddress = "" } = req.query;
 
   if (!queryAddress) {
-    res.status(400).json({ error: "no address provided" } as unknown as Data);
+    res.status(400).json({ error: "no address provided" } as any);
   }
 
   const address =
@@ -27,10 +23,10 @@ export default async function handler(
   // if (ssrCache.has(address)) {
   //   res.setHeader("x-cache", "HIT");
   //   const response = ssrCache.get(address);
-  //   res.status(200).json(response as Data);
+  //   res.status(200).json(response as any);
   // }
 
   const tx = await getTxs(address);
 
-  res.status(200).json(tx as unknown as Data);
+  res.status(200).json(tx as any);
 }
