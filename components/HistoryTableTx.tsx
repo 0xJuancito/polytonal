@@ -55,6 +55,12 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     return `${sign}${tx.erc20?.amount} ${tx.erc20?.symbol}`;
   };
 
+  const getTokenDiffClass = () => {
+    const netPositive =
+      tx.action === "Transfer" && tx.recipient.to === walletAddress;
+    return netPositive ? styles.greenTokenDiff : "";
+  };
+
   const getPrice = () => {
     return `$${tx.erc20?.price}`;
   };
@@ -171,7 +177,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
               className={styles.tokenImage}
             ></Image>
             <div className={styles.tokenDetailContainer}>
-              <div className={styles.tokenDiff}>{getTokenDiff()}</div>
+              <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
               <div className={styles.tokenValue}>{getPrice()}</div>
             </div>
           </div>

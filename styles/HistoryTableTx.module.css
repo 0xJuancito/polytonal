@@ -59,6 +59,10 @@
   flex-direction: column;
 }
 
+.greenTokenDiff {
+  color: rgb(79, 191, 103);
+}
+
 .tokenValue {
   color: rgb(134, 134, 134);
 }
