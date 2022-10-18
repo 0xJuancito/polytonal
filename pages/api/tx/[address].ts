@@ -4,7 +4,7 @@ import Cache from "lru-cache";
 
 const ssrCache = new Cache({
   max: 100,
-  maxAge: 1000 * 60 * 60, // 1hour
+  ttl: 1000 * 60 * 60, // 1hour
 });
 
 type Data = {
