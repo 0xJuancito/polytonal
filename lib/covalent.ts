@@ -40,7 +40,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   const fee = (item.gas_spent / 1000000).toString();
   const feePrice =
     item.gas_spent && item.gas_quote_rate
-      ? ((item.gas_spent * item.gas_quote_rate) / 10000000).toFixed(4)
+      ? ((item.gas_spent * item.gas_quote_rate) / 10000000).toFixed(5)
       : "";
 
   const datetime = item.block_signed_at.toString();
