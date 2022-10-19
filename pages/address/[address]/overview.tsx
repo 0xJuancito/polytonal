@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import WalletCard from "@components/WalletCard";
 import styles from "@styles/Overview.module.css";
 import TabSelector from "@components/TabSelector";
 import PerformanceCard from "@components/PerformanceCard";
