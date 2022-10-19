@@ -113,14 +113,10 @@ const Overview: NextPage = () => {
         const otherWallet = JSON.parse(lsOtherWallet);
         allTxs = allTxs.concat(otherWallet);
       });
-      allTxs.sort((a, b) => {
-        const dateA = new Date(a).getTime();
-        const dateB = new Date(b).getTime();
-        if (dateA === dateB) {
-          return 0;
-        }
-        return dateA < dateB ? -1 : 1;
-      });
+      allTxs = allTxs.sort(
+        (a, b) =>
+          new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+      );
       window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
     } catch (err) {
       console.error(err);
@@ -141,14 +137,10 @@ const Overview: NextPage = () => {
         const otherWallet = JSON.parse(lsOtherWallet);
         allTxs = allTxs.concat(otherWallet);
       });
-      allTxs.sort((a, b) => {
-        const dateA = new Date(a).getTime();
-        const dateB = new Date(b).getTime();
-        if (dateA === dateB) {
-          return 0;
-        }
-        return dateA < dateB ? -1 : 1;
-      });
+      allTxs = allTxs.sort(
+        (a, b) =>
+          new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+      );
       window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
     } catch (err) {
       console.error(err);
