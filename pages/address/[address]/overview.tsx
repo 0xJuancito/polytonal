@@ -114,7 +114,7 @@ const Overview: NextPage = () => {
         allTxs = allTxs.concat(otherWallet);
       });
       allTxs = allTxs.sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
       );
       window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
@@ -138,7 +138,7 @@ const Overview: NextPage = () => {
         allTxs = allTxs.concat(otherWallet);
       });
       allTxs = allTxs.sort(
-        (a, b) =>
+        (a: any, b: any) =>
           new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
       );
       window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
