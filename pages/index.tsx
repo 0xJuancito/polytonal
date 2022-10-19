@@ -4,8 +4,10 @@ import styles from "@styles/ConnectWallet.module.css";
 import { Store, ReactNotifications } from "react-notifications-component";
 import { SetStateAction, useState } from "react";
 import "react-notifications-component/dist/theme.css";
+import { useRouter } from "next/router";
 
 const ConnectWallet: NextPage = () => {
+  const router = useRouter();
   const [address, setAddress] = useState("");
 
   const submitAddress = () => {
@@ -29,6 +31,8 @@ const ConnectWallet: NextPage = () => {
       });
       return;
     }
+
+    router.push(`/address/${address}/overview`);
   };
 
   const handleChange = (event: {
