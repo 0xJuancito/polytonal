@@ -87,8 +87,9 @@
 }
 
 .walletContainer {
+  font-size: 14px;
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
   cursor: pointer;
   padding: 10px;
@@ -108,4 +109,13 @@
   .sidebarBack {
     display: none;
   }
+}
+
+.avatar {
+  border-radius: 5px;
+}
+
+.portfolio {
+  font-size: 15px;
+  font-weight: 500;
 }

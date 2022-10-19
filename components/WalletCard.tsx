@@ -30,7 +30,7 @@ const WalletCard = () => {
         ></Identicon>
         <div className={styles.dataContainer}>
           <div className={styles.address}>{shortenAddress(address)}</div>
-          <div className={styles.balance}>$323.29</div>
+          {/* <div className={styles.balance}>$323.29</div> */}
         </div>
       </div>
       <div className={styles.buttonContainer}>

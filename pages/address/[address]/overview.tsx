@@ -12,6 +12,18 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Identicon from "react-identicons";
 
+const wallets = [
+  "0x8D1D23dA965D33C2EBCf49ddaC95e8Da9Ec1fFa7",
+  "0x6D95A4341fF6321af10983EDD40D6a333F636258",
+  "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
+];
+
+const shortenAddress = (address: string) => {
+  const start = address.slice(0, 6);
+  const end = address.slice(address.length - 4, address.length);
+  return `${start}...${end}`;
+};
+
 const Overview: NextPage = () => {
   const router = useRouter();
 
@@ -53,7 +65,10 @@ const Overview: NextPage = () => {
         <a href="/" className={styles.polytonal}>
           POLYTONAL
         </a>
-        <div className={styles.walletContainer}>
+        <a
+          href={`/address/portfolio/overview`}
+          className={styles.walletContainer}
+        >
           <svg
             width="32"
             height="32"
@@ -69,16 +84,21 @@ const Overview: NextPage = () => {
               fill="#fff"
             ></path>
           </svg>
-          Portfolio
-        </div>
-        <div className={styles.walletContainer}>
-          <Identicon
-            string={address}
-            className={styles.recipientAddressImage}
-            size={"32"}
-          ></Identicon>
-          0x0afd…0212
-        </div>
+          <span className={styles.portfolio}>Portfolio</span>
+        </a>
+        {wallets.map((wallet) => (
+          <a
+            href={`/address/${wallet}/overview`}
+            className={styles.walletContainer}
+          >
+            <Identicon
+              string={wallet}
+              className={styles.avatar}
+              size={"32"}
+            ></Identicon>
+            {shortenAddress(wallet)}
+          </a>
+        ))}
       </div>
 
       <div className={styles.mainContainer}>
