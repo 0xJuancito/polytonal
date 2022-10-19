@@ -35,6 +35,8 @@ const Overview: NextPage = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
+  const [errorWallet, setErrorWallet] = useState(false);
+
   useEffect(() => {
     try {
       const lsWallets = window.localStorage.getItem("wallets") || "[]";
@@ -64,6 +66,7 @@ const Overview: NextPage = () => {
       const newWWallets = JSON.parse(lsNewWallets);
       setWallets(newWWallets);
     } catch (err) {
+      setErrorWallet(true);
       console.log(err);
     }
 
@@ -73,11 +76,11 @@ const Overview: NextPage = () => {
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
       } catch (err) {
+        setErrorWallet(true);
         console.log(err);
       }
       return;
     }
-
     try {
       const lsNewTxs: any = window.localStorage.getItem(
         queryAddress.toLowerCase()
@@ -88,15 +91,22 @@ const Overview: NextPage = () => {
         return;
       }
     } catch (err) {
+      setErrorWallet(true);
       console.log(err);
     }
 
-    fetch(`/api/address/${queryAddress.toLowerCase()}/txs`).then(
-      async (response) => {
+    fetch(`/api/address/${queryAddress.toLowerCase()}/txs`)
+      .then(async (response) => {
         const data = await response.json();
         setTxs(data.txs);
-      }
-    );
+        // TODO works but not great
+        if (!data.txs.length) {
+          setErrorWallet(true);
+        }
+      })
+      .catch((err) => {
+        setErrorWallet(true);
+      });
   }, [router]);
 
   const addWallet = () => {
@@ -184,7 +194,13 @@ const Overview: NextPage = () => {
       return;
     }
 
+    setErrorWallet(false);
+    setSearchValue("");
     router.push(`/address/${searchValue}/overview`);
+  };
+
+  const gotoOverview = (addr: string) => {
+    router.push(`/address/${addr}/overview`);
   };
 
   return (
@@ -203,9 +219,9 @@ const Overview: NextPage = () => {
         <a href="/" className={styles.polytonal}>
           POLYTONAL
         </a>
-        <a
-          href={`/address/portfolio/overview`}
+        <div
           className={styles.walletContainer}
+          onClick={() => gotoOverview("portfolio")}
         >
           <svg
             width="32"
@@ -223,10 +239,10 @@ const Overview: NextPage = () => {
             ></path>
           </svg>
           <span className={styles.portfolio}>PORTFOLIO</span>
-        </a>
+        </div>
         {wallets.map((wallet, id) => (
-          <a
-            href={`/address/${wallet}/overview`}
+          <div
+            onClick={() => gotoOverview(wallet)}
             className={styles.walletContainer}
             key={id}
           >
@@ -236,7 +252,7 @@ const Overview: NextPage = () => {
               size={"32"}
             ></Identicon>
             {shortenAddress(wallet)}
-          </a>
+          </div>
         ))}
       </div>
 
@@ -247,6 +263,7 @@ const Overview: NextPage = () => {
               type="text"
               id="search"
               name="search"
+              value={searchValue}
               onChange={handleSearchChange}
               placeholder="Enter a Harmony address (one... or 0x...)"
               className={styles.searchInput}
@@ -314,9 +331,8 @@ const Overview: NextPage = () => {
             <TabSelector></TabSelector>
           </div>
           <div className={styles.historyTableContainer}>
-            {txs?.length ? (
-              <HistoryTable txs={txs}></HistoryTable>
-            ) : (
+            {txs?.length ? <HistoryTable txs={txs}></HistoryTable> : ""}
+            {!txs.length && !errorWallet ? (
               <div className={styles.loading}>
                 <Image
                   height="200"
@@ -325,6 +341,16 @@ const Overview: NextPage = () => {
                   alt="action"
                 ></Image>
               </div>
+            ) : (
+              ""
+            )}
+            {!txs.length && errorWallet ? (
+              <div className={styles.errorMessage}>
+                No transactions were found for this wallet. Try with another
+                one!
+              </div>
+            ) : (
+              ""
             )}
           </div>
           <div>
