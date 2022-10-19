@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import WalletCard from "@components/WalletCard";
-import styles from "@styles/WalletOverview.module.css";
+import styles from "@styles/Overview.module.css";
 import TabSelector from "@components/TabSelector";
 import PerformanceCard from "@components/PerformanceCard";
 import HistoryCard from "@components/HistoryCard";
@@ -9,6 +9,7 @@ import AssetsCard from "@components/AssetsCard";
 import HistoryTable from "@components/HistoryTable";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Overview: NextPage = () => {
   const router = useRouter();
@@ -53,7 +54,14 @@ const Overview: NextPage = () => {
           {txs.length ? (
             <HistoryTable txs={txs} walletAddress={address}></HistoryTable>
           ) : (
-            ""
+            <div className={styles.loading}>
+              <Image
+                height="200"
+                width="200"
+                src="/loading.svg"
+                alt="action"
+              ></Image>
+            </div>
           )}
         </div>
         <div>
