@@ -345,10 +345,7 @@ const Overview: NextPage = () => {
               ""
             )}
             {!txs.length && errorWallet ? (
-              <div className={styles.errorMessage}>
-                No transactions were found for this wallet. Try with another
-                one!
-              </div>
+              <div className={styles.errorMessage}>No transactions found</div>
             ) : (
               ""
             )}

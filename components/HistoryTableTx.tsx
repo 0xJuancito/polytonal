@@ -216,6 +216,10 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
     return `https://explorer.harmony.one/address/${getRecipientFullAddress()}`;
   };
 
+  const getExternalAddressLinkWallet = () => {
+    return `https://explorer.harmony.one/address/${tx.address}`;
+  };
+
   const getTxDetail = () => {
     return (
       <div className={styles.txDetailContainer}>
@@ -276,9 +280,9 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
           </div>
         </div>
 
-        <div className={styles.tokenRecipientContainer}>
+        <div className={styles.tokenContainer}>
           {tx.action === "Transfer" && tx.hrc20 && !tx.nft ? (
-            <div className={styles.tokenContainer}>
+            <div className={styles.tokenInnerContainer}>
               {getTokenSymbolImage()}
               <div className={styles.tokenDetailContainer}>
                 <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
@@ -288,69 +292,94 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
           ) : (
             ""
           )}
-          {tx.action === "Transfer" && tx.nft ? (
-            <a
-              className={
-                nftUri ? styles.nftTokenContainer : styles.tokenContainer
-              }
-              target={"_blank"}
-              rel={"noreferrer"}
-              href={nftUri}
-              onClick={(event) => {
-                if (nftUri) {
-                  event.stopPropagation();
-                } else {
-                  event.preventDefault();
+
+          <div className={styles.tokenDetailContainer}>
+            {tx.action === "Transfer" && tx.nft ? (
+              <a
+                className={
+                  nftUri ? styles.nftTokenContainer : styles.tokenContainer
                 }
-              }}
-            >
-              {loadingNft ? (
-                <div className={styles.ldsRipple}>
-                  <div></div>
-                  <div></div>
-                </div>
-              ) : (
-                <img
-                  height="32"
-                  width="32"
-                  src={nftImage}
-                  alt="token"
-                  className={styles.nftImage}
-                ></img>
-              )}
-              <div className={styles.tokenDetailContainer}>
+                target={"_blank"}
+                rel={"noreferrer"}
+                href={nftUri}
+                onClick={(event) => {
+                  if (nftUri) {
+                    event.stopPropagation();
+                  } else {
+                    event.preventDefault();
+                  }
+                }}
+              >
+                {loadingNft ? (
+                  <div className={styles.ldsRipple}>
+                    <div></div>
+                    <div></div>
+                  </div>
+                ) : (
+                  <img
+                    height="32"
+                    width="32"
+                    src={nftImage}
+                    alt="token"
+                    className={styles.nftImage}
+                  ></img>
+                )}
                 <div className={getTokenDiffClass()}>
                   {tx.nft?.collectionName} #{tx.nft?.tokenId}
                 </div>
                 <div className={styles.tokenValue}>{getPrice()}</div>
-              </div>
-            </a>
-          ) : (
-            ""
-          )}
-          <div className={styles.recipientContainer}>
-            <a
-              className={styles.recipientInnerContainer}
-              target={"_blank"}
-              rel={"noreferrer"}
-              href={getExternalAddressLink()}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className={styles.recipientText}>{getRecipientTitle()}</div>
-              <div className={styles.recipientAddressContainer}>
-                <div className={styles.recipientAddressImageContainer}>
-                  <Identicon
-                    string={getRecipientFullAddress()}
-                    className={styles.recipientAddressImage}
-                    size={"16"}
-                  ></Identicon>
-                </div>
-                <div className={styles.recipientAddress}>
-                  {getRecipientAddress()}
-                </div>
-              </div>
-            </a>
+              </a>
+            ) : (
+              ""
+            )}
           </div>
+        </div>
+
+        <div className={styles.walletContainer}>
+          <a
+            className={styles.walletInnerContainer}
+            target={"_blank"}
+            rel={"noreferrer"}
+            href={getExternalAddressLinkWallet()}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.walletText}>{"Wallet"}</div>
+            <div className={styles.walletAddressContainer}>
+              <div className={styles.walletAddressImageContainer}>
+                <Identicon
+                  string={tx.address.toLowerCase()}
+                  className={styles.walletAddressImage}
+                  size={"16"}
+                ></Identicon>
+              </div>
+              <div className={styles.walletAddress}>
+                {shortenAddress(tx.address.toLowerCase())}
+              </div>
+            </div>
+          </a>
+        </div>
+        <div className={styles.recipientContainer}>
+          <a
+            className={styles.recipientInnerContainer}
+            target={"_blank"}
+            rel={"noreferrer"}
+            href={getExternalAddressLink()}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.recipientText}>{getRecipientTitle()}</div>
+            <div className={styles.recipientAddressContainer}>
+              <div className={styles.recipientAddressImageContainer}>
+                <Identicon
+                  string={getRecipientFullAddress()}
+                  className={styles.recipientAddressImage}
+                  size={"16"}
+                ></Identicon>
+              </div>
+              <div className={styles.recipientAddress}>
+                {getRecipientAddress()}
+              </div>
+            </div>
+          </a>
         </div>
       </div>
       {active ? getTxDetail() : ""}

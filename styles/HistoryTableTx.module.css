@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 0 0 30%;
+  flex: 0 0 25%;
 }
 
 .actionDetailContainer {
@@ -64,10 +64,16 @@
 
 .tokenContainer {
   display: flex;
+  /* width: 100%; */
+  flex: 0 0 35%;
   align-items: center;
   gap: 8px;
-  /* width: 100%; */
-  max-width: 450px;
+}
+
+.tokenInnerContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nftTokenContainer {
@@ -75,14 +81,13 @@
   align-items: center;
   gap: 8px;
   /* width: 100%; */
-  max-width: 450px;
 }
 
 .nftTokenContainer:hover {
   text-decoration-line: underline;
 }
 
-.nftTokenContainer img {
+.tokenContainer img {
   border-radius: 0;
 }
 
@@ -99,7 +104,9 @@
   color: rgb(134, 134, 134);
 }
 
-.recipientContainer {
+/* walle re */
+
+.walletContainer {
   display: flex;
   flex-direction: column;
   color: rgb(206, 206, 206);
@@ -107,6 +114,54 @@
   margin-left: auto;
   margin-right: 10px;
   gap: 3px;
+  flex: 0 0 20%;
+  /* margin-top: -1px; */
+}
+
+.walletInnerContainer {
+  width: 125px;
+}
+
+.walletInnerContainer:hover {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
+
+.walletText {
+  margin-left: 8px;
+}
+
+.walletAddressContainer {
+  display: flex;
+  gap: 10px;
+  background-color: rgb(35, 35, 35);
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-top: -1px;
+}
+
+.walletAddressImageContainer {
+  display: flex;
+  align-items: center;
+  width: 16px;
+}
+
+.walletAddressImage {
+  border-radius: 50%;
+  /* background-color: rgb(134, 134, 134); */
+}
+
+/* recipient */
+
+.recipientContainer {
+  display: flex;
+  flex-direction: column;
+  color: rgb(206, 206, 206);
+  font-size: 12px;
+  /* margin-left: auto;
+  margin-right: 10px; */
+  gap: 3px;
+  flex: 0 0 20%;
 }
 
 .recipientInnerContainer {
@@ -128,6 +183,7 @@
   background-color: rgb(35, 35, 35);
   border-radius: 10px;
   padding: 2px 8px;
+  margin-top: -1px;
 }
 
 .recipientAddressImageContainer {
@@ -138,8 +194,10 @@
 
 .recipientAddressImage {
   border-radius: 50%;
-  background-color: rgb(134, 134, 134);
+  /* background-color: rgb(134, 134, 134); */
 }
+
+/* txdetail */
 
 .txDetailContainer {
   display: flex;
