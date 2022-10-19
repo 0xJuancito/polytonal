@@ -45,8 +45,8 @@ const ConnectWallet: NextPage = () => {
     <div className={styles.page}>
       <ReactNotifications />
       <Head>
-        <title>Connect Wallet</title>
-        <meta name="description" content="Connect Wallet" />
+        <title>Polytonal</title>
+        <meta name="description" content="Polytonal" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

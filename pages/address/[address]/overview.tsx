@@ -41,8 +41,8 @@ const Overview: NextPage = () => {
   return (
     <div className={styles.page}>
       <Head>
-        <title>Wallet Overview</title>
-        <meta name="description" content="Wallet Overview" />
+        <title>Polytonal</title>
+        <meta name="description" content="Polytonal" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
