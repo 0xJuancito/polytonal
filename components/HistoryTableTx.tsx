@@ -9,10 +9,9 @@ import ABI from "@lib/abis/hrc721.json";
 
 interface Props {
   tx: IHistoryTableTX;
-  walletAddress: string;
 }
 
-const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
+const HistoryTableTx: FC<Props> = ({ tx }) => {
   const [active, setActive] = useState(false);
   const [nftImage, setNftImage] = useState("/nft.webp");
   const [nftUri, setNftUri] = useState("");
@@ -76,19 +75,17 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     let action = tx.action;
 
     if (tx.action === "Transfer") {
-      action = sameAddress(tx.recipient.from, walletAddress)
-        ? "Sent"
-        : "Received";
+      action = sameAddress(tx.recipient.from, tx.address) ? "Sent" : "Received";
 
       if (
-        sameAddress(tx.recipient.from, walletAddress) &&
+        sameAddress(tx.recipient.from, tx.address) &&
         tx.recipient.to === "0x0000000000000000000000000000000000000000"
       ) {
         action = "Burnt";
       }
 
       if (
-        sameAddress(tx.recipient.to, walletAddress) &&
+        sameAddress(tx.recipient.to, tx.address) &&
         tx.recipient.from === "0x0000000000000000000000000000000000000000"
       ) {
         action = "Minted";
@@ -140,7 +137,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     let sign = "";
 
     if (tx.action === "Transfer") {
-      sign = sameAddress(tx.recipient.from, walletAddress) ? "-" : "+";
+      sign = sameAddress(tx.recipient.from, tx.address) ? "-" : "+";
     }
 
     return `${sign}${tx.hrc20?.amount} ${tx.hrc20?.symbol}`;
@@ -151,8 +148,8 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       return "";
     }
 
-    return sameAddress(tx.recipient.to, walletAddress) &&
-      !sameAddress(tx.recipient.from, walletAddress)
+    return sameAddress(tx.recipient.to, tx.address) &&
+      !sameAddress(tx.recipient.from, tx.address)
       ? styles.greenTokenDiff
       : "";
   };
@@ -170,7 +167,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     }
 
     // show the other address
-    if (sameAddress(tx.recipient.from, walletAddress)) {
+    if (sameAddress(tx.recipient.from, tx.address)) {
       return "To";
     }
 
@@ -185,7 +182,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
 
   const getRecipientAddress = () => {
     // show the other address
-    if (sameAddress(tx.recipient.to, walletAddress)) {
+    if (sameAddress(tx.recipient.to, tx.address)) {
       return shortenAddress(tx.recipient.from);
     }
 
@@ -193,7 +190,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   };
 
   const getRecipientFullAddress = () => {
-    return sameAddress(tx.recipient.to, walletAddress)
+    return sameAddress(tx.recipient.to, tx.address)
       ? tx.recipient.from
       : tx.recipient.to;
   };

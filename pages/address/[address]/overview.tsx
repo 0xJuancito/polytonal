@@ -269,7 +269,7 @@ const Overview: NextPage = () => {
           </div>
           <div className={styles.historyTableContainer}>
             {txs?.length ? (
-              <HistoryTable txs={txs} walletAddress={address}></HistoryTable>
+              <HistoryTable txs={txs}></HistoryTable>
             ) : (
               <div className={styles.loading}>
                 <Image
