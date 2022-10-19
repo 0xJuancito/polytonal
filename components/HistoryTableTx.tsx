@@ -1,9 +1,9 @@
+import React, { useCallback, memo, FC, useEffect, useState } from "react";
 import { HttpProvider } from "@harmony-js/network";
 import { HRC721, Key } from "harmony-marketplace-sdk";
 import styles from "@styles/HistoryTableTx.module.css";
 import { IHistoryTableTX } from "@lib/types";
 import Image from "next/image";
-import { FC, useEffect, useState } from "react";
 import Identicon from "react-identicons";
 import ABI from "@lib/abis/hrc721.json";
 
@@ -154,14 +154,14 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
       : "";
   };
 
-  const getPrice = () => {
+  const getPrice = useCallback(() => {
     if (!tx.hrc20?.price) {
       return "";
     }
     return `$${tx.hrc20?.price}`;
-  };
+  }, [tx]);
 
-  const getRecipientTitle = () => {
+  const getRecipientTitle = useCallback(() => {
     if (tx.recipient.isContract) {
       return "Application";
     }
@@ -172,7 +172,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
     }
 
     return "From";
-  };
+  }, [tx]);
 
   const shortenAddress = (address: string) => {
     const start = address.slice(0, 6);
@@ -358,4 +358,4 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   );
 };
 
-export default HistoryTableTx;
+export default memo(HistoryTableTx);

@@ -63,7 +63,7 @@ const ConnectWallet: NextPage = () => {
               id="address"
               name="address"
               onChange={handleChange}
-              placeholder="Enter Harmony address (one... or 0x...)"
+              placeholder="Enter a Harmony address (one... or 0x...)"
               className={styles.addressInput}
             ></input>
             <button

@@ -6,10 +6,12 @@ import PerformanceCard from "@components/PerformanceCard";
 import HistoryCard from "@components/HistoryCard";
 import AssetsCard from "@components/AssetsCard";
 import HistoryTable from "@components/HistoryTable";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Identicon from "react-identicons";
+import { Store, ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 const exampleWallets = [
   "0x8D1D23dA965D33C2EBCf49ddaC95e8Da9Ec1fFa7",
@@ -31,6 +33,8 @@ const Overview: NextPage = () => {
 
   const [wallets, setWallets] = useState([]);
 
+  const [searchValue, setSearchValue] = useState("");
+
   useEffect(() => {
     try {
       const lsWallets = window.localStorage.getItem("wallets") || "[]";
@@ -39,9 +43,10 @@ const Overview: NextPage = () => {
       window.localStorage.clear();
     }
 
-    if (address) {
-      return;
-    }
+    // TODO check
+    // if (address) {
+    //   return;
+    // }
 
     let { address: queryAddress = "" } = router.query;
     queryAddress =
@@ -50,6 +55,9 @@ const Overview: NextPage = () => {
     if (!queryAddress) {
       return;
     }
+
+    setAddress(queryAddress.toLowerCase());
+    setTxs([]);
 
     try {
       const lsNewWallets: any = window.localStorage.getItem("wallets") || "[]";
@@ -64,7 +72,6 @@ const Overview: NextPage = () => {
         const lsNewTxs: any = window.localStorage.getItem("portfolio");
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
-        // missing? TODO
       } catch (err) {
         console.log(err);
       }
@@ -78,7 +85,6 @@ const Overview: NextPage = () => {
       if (lsNewTxs) {
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
-        setAddress(queryAddress.toLowerCase()); // works? TODO
         return;
       }
     } catch (err) {
@@ -89,17 +95,16 @@ const Overview: NextPage = () => {
       async (response) => {
         const data = await response.json();
         setTxs(data.txs);
-        setAddress(data.wallet.toLowerCase());
       }
     );
   }, [router]);
 
   const addWallet = () => {
     const auxWallets = wallets as any;
-    if (auxWallets.includes(address)) {
+    if (auxWallets.includes(address.toLowerCase())) {
       return;
     }
-    const newWallets = [...auxWallets, address] as any;
+    const newWallets = [...auxWallets, address.toLowerCase()] as any;
     setWallets(newWallets);
     window.localStorage.setItem(address.toLowerCase(), JSON.stringify(txs));
     window.localStorage.setItem("wallets", JSON.stringify(newWallets));
@@ -123,7 +128,9 @@ const Overview: NextPage = () => {
   };
 
   const removeWallet = () => {
-    const newWallets = wallets.filter((wallet) => wallet !== address);
+    const newWallets = wallets.filter(
+      (wallet) => wallet !== address.toLowerCase()
+    );
     setWallets(newWallets);
     window.localStorage.removeItem(address.toLowerCase());
     window.localStorage.setItem("wallets", JSON.stringify(newWallets));
@@ -146,8 +153,43 @@ const Overview: NextPage = () => {
     }
   };
 
+  const handleSearchChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setSearchValue(event.target.value);
+  };
+
+  const search = () => {
+    if (
+      !searchValue.length ||
+      searchValue.toLowerCase() === address.toLowerCase()
+    ) {
+      return;
+    }
+
+    if (searchValue.length != 42) {
+      Store.addNotification({
+        title: "Invalid address",
+        message: "The provided Harmony address is invalid",
+        type: "danger",
+        insert: "bottom",
+        container: "bottom-center",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 4000,
+          onScreen: true,
+        },
+      });
+      return;
+    }
+
+    router.push(`/address/${searchValue}/overview`);
+  };
+
   return (
     <div className={styles.page}>
+      <ReactNotifications />
       <Head>
         <title>Polytonal</title>
         <meta name="description" content="Polytonal" />
@@ -200,6 +242,19 @@ const Overview: NextPage = () => {
 
       <div className={styles.mainContainer}>
         <main className={styles.main}>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              id="search"
+              name="search"
+              onChange={handleSearchChange}
+              placeholder="Enter a Harmony address (one... or 0x...)"
+              className={styles.searchInput}
+            ></input>
+            <button className={styles.cardAddButton} onClick={() => search()}>
+              Search
+            </button>
+          </div>
           <div className={styles.cardContainer}>
             <div>
               {router.query.address === "portfolio" ? (
@@ -220,7 +275,7 @@ const Overview: NextPage = () => {
                 </svg>
               ) : (
                 <Identicon
-                  string={address}
+                  string={address.toLowerCase()}
                   className={styles.cardProfileImg}
                   size={"104"}
                 ></Identicon>
@@ -229,7 +284,7 @@ const Overview: NextPage = () => {
                 <div className={styles.cardAddress}>
                   {router.query.address === "portfolio"
                     ? "PORTFOLIO"
-                    : shortenAddress(address)}
+                    : shortenAddress(address.toLowerCase())}
                 </div>
                 {/* <div className={styles.cardBalance}>$323.29</div> */}
               </div>
@@ -242,13 +297,13 @@ const Overview: NextPage = () => {
                   className={styles.cardAddButton}
                   onClick={() => {
                     {
-                      (wallets as any).includes(address)
+                      (wallets as any).includes(address.toLowerCase())
                         ? removeWallet()
                         : addWallet();
                     }
                   }}
                 >
-                  {(wallets as any).includes(address)
+                  {(wallets as any).includes(address.toLowerCase())
                     ? "Remove wallet"
                     : "Add wallet"}
                 </button>

@@ -60,7 +60,7 @@
   display: flex;
   width: 100%;
   justify-content: center;
-  padding: 25px 0;
+  padding: 15px 0;
 }
 
 .main {
@@ -137,7 +137,7 @@
   background-color: rgb(30, 30, 30);
   position: fixed;
   height: 100%;
-  padding: 15px 20px;
+  padding: 10px 20px;
 }
 
 .walletContainer {
@@ -172,4 +172,28 @@
 .portfolio {
   font-size: 15px;
   font-weight: 500;
+}
+
+/* search */
+
+.searchInput {
+  display: flex;
+  background-color: rgb(41, 41, 38);
+  padding: 12px;
+  border-radius: 8px;
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  max-width: 500px;
+}
+
+.searchContainer {
+  display: flex;
+  gap: 15px;
+  border-color: rgb(45, 45, 50);
+  border-width: 1px;
+  border-bottom-style: solid;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
 }
