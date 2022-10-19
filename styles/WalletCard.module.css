@@ -1,32 +1,32 @@
-.profileImg {
+.cardProfileImg {
   border-radius: 16px;
 }
 
-.container {
+.cardContainer {
   display: flex;
   gap: 20px;
   justify-content: space-between;
 }
 
-.dataContainer {
+.cardDataContainer {
   display: flex;
   flex-direction: column;
   padding-top: 5px;
 }
 
-.address {
+.cardAddress {
   font-size: 20px;
   line-height: 24px;
   font-weight: 500;
 }
 
-.balance {
+.cardBalance {
   font-size: 40px;
   line-height: 52px;
   font-weight: 500;
 }
 
-.addButton {
+.cardAddButton {
   outline: none;
   font-size: 14px;
   line-height: 20px;
@@ -40,12 +40,12 @@
   border-style: solid;
 }
 
-.addButton:hover {
+.cardAddButton:hover {
   cursor: pointer;
   background-color: rgb(69, 70, 74);
 }
 
-.buttonContainer {
+.cardButtonContainer {
   display: flex;
   align-items: center;
 }

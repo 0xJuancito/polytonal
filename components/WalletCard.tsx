@@ -20,6 +20,10 @@ const WalletCard = () => {
     return `${start}...${end}`;
   };
 
+  const addWallet = () => {
+    console.log(address);
+  };
+
   return (
     <div className={styles.container}>
       <div>
@@ -34,7 +38,14 @@ const WalletCard = () => {
         </div>
       </div>
       <div className={styles.buttonContainer}>
-        <button className={styles.addButton}>Add wallet</button>
+        <button
+          className={styles.addButton}
+          onClick={() => {
+            addWallet();
+          }}
+        >
+          Add wallet
+        </button>
       </div>
     </div>
   );

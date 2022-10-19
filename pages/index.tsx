@@ -70,7 +70,7 @@ const ConnectWallet: NextPage = () => {
               className={styles.addButton}
               onClick={() => submitAddress()}
             >
-              Add
+              Search
             </button>
           </div>
         </div>

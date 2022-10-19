@@ -218,5 +218,9 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     }
   }
 
+  response.address = response.address.toLowerCase();
+  response.recipient.from = response.recipient.from.toLowerCase();
+  response.recipient.to = response.recipient.to.toLowerCase();
+
   return response;
 };
