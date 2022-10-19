@@ -49,14 +49,23 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
   }, []);
 
   const getActionIcon = () => {
-    let icon = "";
-    if (tx.action === "Transfer") {
-      icon = sameAddress(tx.recipient.from, walletAddress)
-        ? "/actions/send.svg"
-        : "/actions/receive.svg";
-    }
+    const title: string = getActionTitle();
+    const icons: any = {
+      Approval: "/actions/approval.svg",
+      "Approval NFT": "/actions/approval.svg",
+      Minted: "/actions/mint.svg",
+      "Minted NFT": "/actions/mint.svg",
+      Received: "/actions/receive.svg",
+      "Received NFT": "/actions/receive.svg",
+      Sent: "/actions/send.svg",
+      "Sent NFT": "/actions/send.svg",
+      Swap: "/actions/swap.svg",
+      "Swap NFT": "/actions/swap.svg",
+      Trade: "/actions/trade.svg",
+      "Trade NFT": "/actions/trade.svg",
+    };
 
-    return icon || "/actions/contract.svg";
+    return icons[title] || "/actions/contract.svg";
   };
 
   const sameAddress = (address1: string, address2: string) => {
@@ -70,6 +79,20 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       action = sameAddress(tx.recipient.from, walletAddress)
         ? "Sent"
         : "Received";
+
+      if (
+        sameAddress(tx.recipient.from, walletAddress) &&
+        tx.recipient.to === "0x0000000000000000000000000000000000000000"
+      ) {
+        action = "Burnt";
+      }
+
+      if (
+        sameAddress(tx.recipient.to, walletAddress) &&
+        tx.recipient.from === "0x0000000000000000000000000000000000000000"
+      ) {
+        action = "Minted";
+      }
 
       if (tx.nft) {
         action += " NFT";
@@ -128,8 +151,10 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
       return "";
     }
 
-    const netPositive = sameAddress(tx.recipient.to, walletAddress);
-    return netPositive ? styles.greenTokenDiff : "";
+    return sameAddress(tx.recipient.to, walletAddress) &&
+      !sameAddress(tx.recipient.from, walletAddress)
+      ? styles.greenTokenDiff
+      : "";
   };
 
   const getPrice = () => {
@@ -145,11 +170,11 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
     }
 
     // show the other address
-    if (sameAddress(tx.recipient.to, walletAddress)) {
-      return "From";
+    if (sameAddress(tx.recipient.from, walletAddress)) {
+      return "To";
     }
 
-    return "To";
+    return "From";
   };
 
   const shortenAddress = (address: string) => {
@@ -255,7 +280,7 @@ const HistoryTableTx: FC<Props> = ({ tx, walletAddress }) => {
         </div>
 
         <div className={styles.tokenRecipientContainer}>
-          {tx.action === "Transfer" && tx.hrc20 ? (
+          {tx.action === "Transfer" && tx.hrc20 && !tx.nft ? (
             <div className={styles.tokenContainer}>
               {getTokenSymbolImage()}
               <div className={styles.tokenDetailContainer}>

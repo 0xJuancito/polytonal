@@ -18,7 +18,7 @@ export interface IHistoryTableResponse {
 export const getTxs = async (
   address: string,
   pageNumber = 0,
-  pageSize = 20
+  pageSize = 200
 ): Promise<IHistoryTableResponse> => {
   const qsCurrency = `quote-currency=USD`;
   const qsFormat = `format=JSON`;
@@ -67,6 +67,16 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     },
   };
 
+  // Action
+  if (response.action === "Contract Execution") {
+    const action = item.log_events
+      .map((event) => event.decoded)
+      .find((decoded) => decoded?.name && decoded?.name !== "Transfer")?.name;
+    if (action) {
+      response.action = action;
+    }
+  }
+
   // hrc20
   const hrc20Log = item.log_events.find((log) => {
     if (!log.decoded?.params) {
@@ -114,12 +124,8 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
       price: hrc20Price,
     };
 
-    if (response.recipient.from !== address) {
-      response.recipient.from = fromUser;
-    }
-    if (response.recipient.to !== address) {
-      response.recipient.to = toUser;
-    }
+    response.recipient.from = fromUser;
+    response.recipient.to = toUser;
   }
 
   // nft
@@ -161,12 +167,8 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     };
     response.recipient.isContract = false;
 
-    if (response.recipient.from !== address) {
-      response.recipient.from = fromUser;
-    }
-    if (response.recipient.to !== address) {
-      response.recipient.to = toUser;
-    }
+    response.recipient.from = fromUser;
+    response.recipient.to = toUser;
   }
 
   // ONE
@@ -193,13 +195,26 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     response.recipient.isContract = false;
   }
 
-  // Action
-  if (response.action === "Contract Execution") {
-    const action = item.log_events
-      .map((event) => event.decoded)
-      .find((decoded) => decoded?.name)?.name;
-    if (action) {
-      response.action = action;
+  // Fallback
+  if (
+    sameAddress(item.from_address, address) &&
+    item.log_events.some((event) => event.decoded?.name === "Transfer") &&
+    item.log_events.some(
+      (event) =>
+        event.decoded?.name &&
+        event.decoded?.name !== "Transfer" &&
+        event.decoded?.name !== "Approval"
+    )
+  ) {
+    response.recipient.from = item.from_address;
+    response.recipient.to = item.to_address;
+    response.recipient.isContract = true;
+    response.action = "Contract Execution";
+    delete response.hrc20;
+    delete response.nft;
+
+    if (item.log_events.some((event) => event.decoded?.name === "Swap")) {
+      response.action = "Swap";
     }
   }
 

@@ -29,7 +29,7 @@ const Overview: NextPage = () => {
       return;
     }
 
-    fetch(`/api/tx/${queryAddress}`).then(async (response) => {
+    fetch(`/api/address/${queryAddress}/txs`).then(async (response) => {
       const data = await response.json();
       setTxs(data.txs);
       setAddress(data.wallet);
