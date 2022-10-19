@@ -69,7 +69,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
   // hrc20
   const hrc20Log = item.log_events.find((log) => {
-    if (!log.decoded) {
+    if (!log.decoded?.params) {
       return null;
     }
 
@@ -82,7 +82,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     const isValue = log.decoded.params.some((param) => param.name === "value");
     return isTransfer && toUser && isValue;
   });
-  if (hrc20Log?.decoded) {
+  if (hrc20Log?.decoded?.params) {
     const fromUser =
       hrc20Log.decoded.params.find((param) => param.name === "from")?.value ||
       "";
@@ -124,7 +124,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
 
   // nft
   const nftLog = item.log_events.find((log) => {
-    if (!log.decoded) {
+    if (!log.decoded?.params) {
       return null;
     }
 
@@ -139,7 +139,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
     return isTransfer && toUser && isNft;
   });
 
-  if (nftLog?.decoded) {
+  if (nftLog?.decoded?.params) {
     const fromUser =
       nftLog.decoded.params.find((param) => param.name === "from")?.value || "";
 

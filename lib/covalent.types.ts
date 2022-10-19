@@ -9,7 +9,7 @@ export interface TxParam {
 export interface TxDecoded {
   name: string;
   signature: string;
-  params: TxParam[];
+  params?: TxParam[];
 }
 
 export interface TxLogEvent {
