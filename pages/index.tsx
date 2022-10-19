@@ -53,7 +53,7 @@ const ConnectWallet: NextPage = () => {
       <main className={styles.main}>
         <div className={styles.polytonal}>Polytonal</div>
         <div className={styles.subtitle}>
-          All your Harmony wallets in one place
+          Track all your Harmony wallets in one place
         </div>
         <div className={styles.addressContainer}>
           <div className={styles.label}>Track any wallet</div>
