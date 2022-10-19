@@ -5,6 +5,7 @@
 .container {
   display: flex;
   gap: 20px;
+  justify-content: space-between;
 }
 
 .dataContainer {
@@ -23,4 +24,28 @@
   font-size: 40px;
   line-height: 52px;
   font-weight: 500;
+}
+
+.addButton {
+  outline: none;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 9px 30px;
+  height: 40px;
+  background: 0 0;
+  border-color: rgb(69, 70, 74);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.addButton:hover {
+  cursor: pointer;
+  background-color: rgb(69, 70, 74);
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
 }
