@@ -15,7 +15,8 @@
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-identicons": "^1.2.5"
+    "react-identicons": "^1.2.5",
+    "react-notifications-component": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "18.11.0",

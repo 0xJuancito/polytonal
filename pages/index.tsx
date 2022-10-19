@@ -1,11 +1,45 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import WalletCard from "@components/WalletCard";
 import styles from "@styles/ConnectWallet.module.css";
+import { Store, ReactNotifications } from "react-notifications-component";
+import { SetStateAction, useState } from "react";
+import "react-notifications-component/dist/theme.css";
 
 const ConnectWallet: NextPage = () => {
+  const [address, setAddress] = useState("");
+
+  const submitAddress = () => {
+    if (!address.length) {
+      return;
+    }
+
+    if (address.length != 42) {
+      Store.addNotification({
+        title: "Invalid address",
+        message: "The provided Harmony address is invalid",
+        type: "danger",
+        insert: "bottom",
+        container: "bottom-center",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 4000,
+          onScreen: true,
+        },
+      });
+      return;
+    }
+  };
+
+  const handleChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setAddress(event.target.value);
+  };
+
   return (
     <div className={styles.page}>
+      <ReactNotifications />
       <Head>
         <title>Connect Wallet</title>
         <meta name="description" content="Connect Wallet" />
@@ -22,10 +56,18 @@ const ConnectWallet: NextPage = () => {
           <div className={styles.inputContainer}>
             <input
               type="text"
+              id="address"
+              name="address"
+              onChange={handleChange}
               placeholder="Enter Harmony address (one... or 0x...)"
               className={styles.addressInput}
             ></input>
-            <button className={styles.addButton}>Add</button>
+            <button
+              className={styles.addButton}
+              onClick={() => submitAddress()}
+            >
+              Add
+            </button>
           </div>
         </div>
       </main>
