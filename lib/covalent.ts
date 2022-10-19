@@ -10,11 +10,16 @@ const sameAddress = (addr1: string, addr2: string) => {
   return addr1.toLowerCase() === addr2.toLowerCase();
 };
 
+export interface IHistoryTableResponse {
+  wallet: string;
+  txs: IHistoryTableTX[];
+}
+
 export const getTxs = async (
   address: string,
   pageNumber = 0,
-  pageSize = 100
-): Promise<IHistoryTableTX[]> => {
+  pageSize = 20
+): Promise<IHistoryTableResponse> => {
   const qsCurrency = `quote-currency=USD`;
   const qsFormat = `format=JSON`;
   const qsOrder = `block-signed-at-asc=false`;
@@ -31,9 +36,12 @@ export const getTxs = async (
   const result = await response.json();
   const data = result.data as TxResponse;
 
-  const txHistory = data.items.map((item) => parseTx(item, address));
+  const txHistory = data.items.map((item) => parseTx(item, data.address));
 
-  return txHistory.filter((tx) => tx) as IHistoryTableTX[];
+  return {
+    wallet: data.address,
+    txs: txHistory.filter((tx) => tx) as IHistoryTableTX[],
+  };
 };
 
 const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
@@ -46,6 +54,7 @@ const parseTx = (item: TxItem, address: string): IHistoryTableTX | null => {
   const datetime = item.block_signed_at.toString();
 
   const response: IHistoryTableTX = {
+    address,
     action: "Contract Execution",
     datetime,
     fee,

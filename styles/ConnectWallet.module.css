@@ -7,14 +7,58 @@
 .main {
   display: flex;
   flex-direction: column;
-  width: 450px;
+  width: 100%;
+  max-width: 630px;
   justify-content: center;
   height: 80vh;
 }
 
 .title {
-  font-size: 40px;
+  font-size: 50px;
   line-height: 48px;
+  font-weight: 600;
+}
+
+.polytonal {
+  /* font-family: "Exo", sans-serif; */
+  font-size: 13vw;
+  font-weight: 900;
+  text-transform: uppercase;
+  background: linear-gradient(
+    219deg,
+    #186cb8 19%,
+    transparent 19%,
+    transparent 20%,
+    #2a9a9f 20%,
+    #2a9a9f 39%,
+    transparent 39%,
+    transparent 40%,
+    #f1b211 40%,
+    #f1b211 59%,
+    transparent 59%,
+    transparent 60%,
+    #e83611 60%,
+    #e83611 79%,
+    transparent 79%,
+    transparent 80%,
+    #f9002f 80%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@media screen and (min-width: 768px) {
+  .polytonal {
+    font-size: 6.5rem;
+  }
+}
+
+.subtitle {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 25px;
+  line-height: 36px;
   font-weight: 600;
 }
 

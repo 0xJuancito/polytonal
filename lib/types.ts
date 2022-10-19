@@ -11,6 +11,7 @@ export type TxNft = {
 };
 
 export type IHistoryTableTX = {
+  address: string;
   action: string;
   datetime: string;
   fee: string;
