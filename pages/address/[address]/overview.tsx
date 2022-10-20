@@ -6,7 +6,7 @@ import PerformanceCard from "@components/PerformanceCard";
 import HistoryCard from "@components/HistoryCard";
 import AssetsCard from "@components/AssetsCard";
 import HistoryTable from "@components/HistoryTable";
-import { SetStateAction, useEffect, useReducer, useState } from "react";
+import { memo, SetStateAction, useEffect, useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Identicon from "react-identicons";
@@ -58,6 +58,8 @@ const Overview: NextPage = () => {
   const [errorWallet, setErrorWallet] = useState(false);
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const [selectedTab, setSelectedTab] = useState("history");
 
   useEffect(() => {
     try {
@@ -375,7 +377,32 @@ const Overview: NextPage = () => {
             </div>
           </div>
           <div className={styles.tabSelectorContainer}>
-            <TabSelector></TabSelector>
+            <div className={styles.tabContainer}>
+              <div
+                className={
+                  selectedTab === "history" ? styles.tabSelected : styles.tab
+                }
+                onClick={() => setSelectedTab("history")}
+              >
+                History
+              </div>
+              <div
+                className={
+                  selectedTab === "tokens" ? styles.tabSelected : styles.tab
+                }
+                onClick={() => setSelectedTab("tokens")}
+              >
+                Tokens
+              </div>
+              <div
+                className={
+                  selectedTab === "nfts" ? styles.tabSelected : styles.tab
+                }
+                onClick={() => setSelectedTab("nfts")}
+              >
+                NFTs
+              </div>
+            </div>
           </div>
           <div className={styles.filtersContainer}>
             <div className={styles.datepicker}>

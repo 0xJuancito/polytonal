@@ -1,4 +1,4 @@
-.container {
+.tabContainer {
   display: flex;
   height: 30px;
   font-size: 15px;
@@ -8,7 +8,7 @@
   border-bottom-style: solid;
 }
 
-.selected {
+.tabSelected {
   color: rgb(0, 163, 245);
   border-color: rgb(0, 163, 245);
   border-width: 2px;

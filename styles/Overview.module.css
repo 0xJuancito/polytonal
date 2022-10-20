@@ -237,3 +237,35 @@
   background-color: transparent;
   border-width: 0;
 }
+
+/* tab */
+
+.tabContainer {
+  display: flex;
+  height: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  border-color: rgb(45, 45, 50);
+  border-width: 1px;
+  border-bottom-style: solid;
+}
+
+.tabSelected {
+  color: rgb(0, 163, 245);
+  border-color: rgb(0, 163, 245);
+  border-width: 2px;
+  border-bottom-style: solid;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.tab {
+  padding: 0 8px;
+}
+
+.tab:hover {
+  border-color: rgb(186, 186, 209);
+  border-width: 1px;
+  border-bottom-style: solid;
+  cursor: pointer;
+}
