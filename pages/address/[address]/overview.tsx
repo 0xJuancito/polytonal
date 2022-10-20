@@ -651,6 +651,7 @@ const Overview: NextPage = () => {
                   {!filteredTxs.length && !errorWallet ? (
                     <div className={styles.loading}>
                       <Image
+                        unoptimized
                         height="200"
                         width="200"
                         src="/loading.svg"
@@ -755,6 +756,7 @@ const Overview: NextPage = () => {
                       {loadingTokens ? (
                         <div className={styles.loading}>
                           <Image
+                            unoptimized
                             height="200"
                             width="200"
                             src="/loading.svg"
@@ -797,6 +799,7 @@ const Overview: NextPage = () => {
                     {loadingNfts ? (
                       <div className={styles.loading}>
                         <Image
+                          unoptimized
                           height="200"
                           width="200"
                           src="/loading.svg"
