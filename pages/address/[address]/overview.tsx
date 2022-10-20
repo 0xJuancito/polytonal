@@ -98,11 +98,7 @@ const Overview: NextPage = () => {
         const lsNewTxs: any = window.localStorage.getItem("portfolio");
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
-        const filtered = filterDates(newTxs) as any;
-        setFilteredTxs(filtered);
-        if (!filtered.length) {
-          setErrorWallet(true);
-        }
+        filterDates(newTxs);
       } catch (err) {
         setErrorWallet(true);
         console.log(err);
@@ -116,11 +112,7 @@ const Overview: NextPage = () => {
       if (lsNewTxs) {
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
-        const filtered = filterDates(newTxs) as any;
-        setFilteredTxs(filtered);
-        if (!filtered.length) {
-          setErrorWallet(true);
-        }
+        filterDates(newTxs);
         return;
       }
     } catch (err) {
@@ -133,10 +125,7 @@ const Overview: NextPage = () => {
         const data = await response.json();
         setTxs(data.txs);
         const filtered = filterDates(data.txs) as any;
-        setFilteredTxs(filtered);
-        if (!filtered.length) {
-          setErrorWallet(true);
-        }
+        filterDates(data.txs);
       })
       .catch((err) => {
         setErrorWallet(true);
@@ -147,7 +136,7 @@ const Overview: NextPage = () => {
     allTxs: IHistoryTableTX[],
     { startDate, endDate } = state
   ) => {
-    return allTxs.filter((tx) => {
+    const filtered = allTxs.filter((tx) => {
       if (!startDate || !endDate) {
         return true;
       }
@@ -156,6 +145,11 @@ const Overview: NextPage = () => {
       const endDateM = new Date(endDate).getTime();
       return nowM >= startDateM && nowM < endDateM;
     });
+
+    setFilteredTxs(filtered as any);
+    if (!filtered.length) {
+      setErrorWallet(true);
+    }
   };
 
   const addWallet = () => {
@@ -253,7 +247,7 @@ const Overview: NextPage = () => {
   };
 
   const onDateChange = (data: any) => {
-    setFilteredTxs(filterDates(txs, data) as any);
+    filterDates(txs, data);
   };
 
   return (
