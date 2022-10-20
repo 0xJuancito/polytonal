@@ -81,6 +81,9 @@ const Overview: NextPage = () => {
 
   const [walletValue, setWalletValue] = useState("0.00");
 
+  const [loadingTokens, setLoadingTokens] = useState(false);
+  const [loadingNfts, setLoadingNfts] = useState(false);
+
   useEffect(() => {
     try {
       const lsWallets = window.localStorage.getItem("wallets") || "[]";
@@ -171,23 +174,29 @@ const Overview: NextPage = () => {
         setErrorWallet(true);
       });
 
+    setLoadingTokens(true);
     fetch(`/api/address/${queryAddress.toLowerCase()}/tokens`)
       .then(async (response) => {
         const data = await response.json();
         setTokens(data.tokens);
         calculateAndSetWalletValue(data.tokens);
+        setLoadingTokens(false);
       })
       .catch((err) => {
+        setLoadingTokens(false);
         console.error(err);
       });
 
+    setLoadingNfts(true);
     fetch(`/api/address/${queryAddress.toLowerCase()}/nfts`)
       .then(async (response) => {
         const data = await response.json();
         setNfts(data.nfts);
+        setLoadingNfts(false);
       })
       .catch((err) => {
         console.error(err);
+        setLoadingNfts(false);
       });
   }, [router]);
 
@@ -704,7 +713,18 @@ const Overview: NextPage = () => {
                   ))}
                   {!tokens.length ? (
                     <div className={styles.errorMessageTokens}>
-                      There are no tokens in this wallet
+                      {loadingTokens ? (
+                        <div className={styles.loading}>
+                          <Image
+                            height="200"
+                            width="200"
+                            src="/loading.svg"
+                            alt="action"
+                          ></Image>
+                        </div>
+                      ) : (
+                        "No tokens could be fetched from this wallet"
+                      )}
                     </div>
                   ) : (
                     ""
@@ -735,7 +755,18 @@ const Overview: NextPage = () => {
                 ))}
                 {!nfts.length ? (
                   <div className={styles.errorMessageNfts}>
-                    There are no NFTs in this wallet
+                    {loadingNfts ? (
+                      <div className={styles.loading}>
+                        <Image
+                          height="200"
+                          width="200"
+                          src="/loading.svg"
+                          alt="action"
+                        ></Image>
+                      </div>
+                    ) : (
+                      "No NFTS could be fetched from this wallet"
+                    )}
                   </div>
                 ) : (
                   ""

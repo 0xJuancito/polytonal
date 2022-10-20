@@ -402,3 +402,11 @@
   align-items: center;
   justify-content: center;
 }
+
+.errorMessageTokens .loading {
+  padding: 0;
+}
+
+.errorMessageNfts .loading {
+  padding: 0;
+}
