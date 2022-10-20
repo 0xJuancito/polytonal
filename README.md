@@ -1,4 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Polytonal - For Encode x Harmony Hackathon
+
+<img width="729" alt="Screen Shot 2022-10-20 at 11 36 12" src="https://user-images.githubusercontent.com/12957692/196978974-793e7d16-6414-466a-81fa-94334b6884b1.png">
+
+## Harmony SDK & Covalent Usage
+
+- [Harmony Marketplace SDK - HRC721 API tokenURI for retrieving the NFT metadata for HRC721](https://github.com/0xJuancito/polytonal/blob/main/components/HistoryTableTx.tsx)
+- [Harmony Marketplace SDK - HRC1155 API tokenURI for retrieving the NFT metadata for HRC1155](https://github.com/0xJuancito/polytonal/blob/main/components/HistoryTableTx.tsx)
+- [Harmony Marketplace SDK - KEY for generating a temporary wallet without private key](https://github.com/0xJuancito/polytonal/blob/main/components/HistoryTableTx.tsx)
+- [Harmony Marketplace SDK - HttpProvider for connecting to the Harmony RPC](https://github.com/0xJuancito/polytonal/blob/main/components/HistoryTableTx.tsx)
+- [Covalent - `transactions_v2` endpoint for getting the list of txs for the wallet and displaying it as a list](https://github.com/0xJuancito/polytonal/blob/main/lib/covalent.ts)
+- [Covalent - `balances_v2` endpoint for getting the Tokens balances for the user](https://github.com/0xJuancito/polytonal/blob/main/lib/covalent.ts)
+- [Covalent - `balances_v2` endpoint for getting the NFTs for the user](https://github.com/0xJuancito/polytonal/blob/main/lib/covalent.ts)
+
+## Features
+
+### Required by the hackathon
+
+- Use of the Harmony Marketplace SDK to integrate with the blockchain and the HRC standards
+- Use of Covalent APIs for getting wallet token and NFTs balances
+- Accept multiple wallet addresses entered by user
+- Retrieve all transaction details for the address over a period of time (default 1 month)
+- Retrieve all HRC20/721/1155 transactions that impact the user (e.g. transactions made by user and tokens transferred to the user, etc)
+- Show this information in a dashboard with ability to drill into each transaction (send user to explorer for more info)
+- Opensource (MIT / BSD) github
+- Working website that can be demonstrated: [https://polytonal.vercel.app](https://polytonal.vercel.app)
+
+### Extra features
+
+- Display HRC20 tokens balances detail for all tokens the user has
+- Display the total price of the HRC20 assets the user has
+- Display a collection of NFTs owned by the user
+- Link to NFT metadata
+- Link to the explorer for the wallet address used
+- Link to the explorer for the address that the wallet interacted with
+- Display other interactions like Approval, Transfer, Mint, Burn, etc
+- Custom wallet icons to distinguish addresses
+- Filter by date or get all transactions
+- Local storage cache for quickly loading once the data has been retrieved
+
+<p align="left">
+<img width="45%" alt="Screen Shot 2022-10-20 at 11 38 24" src="https://user-images.githubusercontent.com/12957692/196979583-c167ef0b-ea50-41d6-9039-fa98b8b0756a.png">
+&nbsp; &nbsp; &nbsp; &nbsp;
+<img width="45%" alt="Screen Shot 2022-10-20 at 11 41 15" src="https://user-images.githubusercontent.com/12957692/196980303-6898eafa-07ce-447e-b4e2-551d0f6b494a.png">
+&nbsp; &nbsp; &nbsp; &nbsp;
+<img width="45%" alt="Screen Shot 2022-10-20 at 11 38 15" src="https://user-images.githubusercontent.com/12957692/196979592-2c174aee-680e-4afd-8e5d-0f452d7c0721.png">
+&nbsp; &nbsp; &nbsp; &nbsp;
+<img width="45%" alt="Screen Shot 2022-10-20 at 11 38 03" src="https://user-images.githubusercontent.com/12957692/196979596-22a2eb9c-f64e-4702-b805-b8740db2f351.png">
+</p>
+
+
+
+
+
 
 ## Getting Started
 
@@ -17,18 +70,3 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
