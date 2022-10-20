@@ -804,7 +804,7 @@ const Overview: NextPage = () => {
                         ></Image>
                       </div>
                     ) : (
-                      "No NFTS could be fetched from this wallet"
+                      "No NFTS could be fetched from Covalent for this wallet"
                     )}
                   </div>
                 ) : (
