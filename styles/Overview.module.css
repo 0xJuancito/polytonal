@@ -204,3 +204,36 @@
   text-align: center;
   padding: 150px 0;
 }
+
+/* filters */
+
+.filtersContainer {
+  margin-top: 25px;
+  margin-left: -102px;
+}
+
+.datepicker {
+  scale: 0.8;
+}
+
+.datepicker * {
+  z-index: 999 !important;
+}
+
+.datepicker input {
+  background: rgb(22, 22, 26);
+  color: #fff;
+  border-radius: 10px;
+  border-color: rgb(69, 70, 74);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.datepicker input::placeholder {
+  color: #fff;
+}
+
+.datepicker label {
+  background-color: transparent;
+  border-width: 0;
+}

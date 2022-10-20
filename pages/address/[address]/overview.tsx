@@ -6,18 +6,37 @@ import PerformanceCard from "@components/PerformanceCard";
 import HistoryCard from "@components/HistoryCard";
 import AssetsCard from "@components/AssetsCard";
 import HistoryTable from "@components/HistoryTable";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Identicon from "react-identicons";
 import { Store, ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import { DateRangeInput } from "@datepicker-react/styled";
+import { IHistoryTableTX } from "@lib/types";
 
 const exampleWallets = [
   "0x8D1D23dA965D33C2EBCf49ddaC95e8Da9Ec1fFa7",
   "0x6D95A4341fF6321af10983EDD40D6a333F636258",
   "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
 ];
+
+const initialState = {
+  startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  endDate: new Date(),
+  focusedInput: null,
+};
+
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case "focusChange":
+      return { ...state, focusedInput: action.payload };
+    case "dateChange":
+      return action.payload;
+    default:
+      throw new Error();
+  }
+}
 
 const shortenAddress = (address: string) => {
   const start = address.slice(0, 6);
@@ -29,6 +48,7 @@ const Overview: NextPage = () => {
   const router = useRouter();
 
   const [txs, setTxs] = useState([]);
+  const [filteredTxs, setFilteredTxs] = useState([]);
   const [address, setAddress] = useState("");
 
   const [wallets, setWallets] = useState([]);
@@ -36,6 +56,8 @@ const Overview: NextPage = () => {
   const [searchValue, setSearchValue] = useState("");
 
   const [errorWallet, setErrorWallet] = useState(false);
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     try {
@@ -60,6 +82,7 @@ const Overview: NextPage = () => {
 
     setAddress(queryAddress.toLowerCase());
     setTxs([]);
+    setFilteredTxs([]);
 
     try {
       const lsNewWallets: any = window.localStorage.getItem("wallets") || "[]";
@@ -75,6 +98,11 @@ const Overview: NextPage = () => {
         const lsNewTxs: any = window.localStorage.getItem("portfolio");
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
+        const filtered = filterDates(newTxs) as any;
+        setFilteredTxs(filtered);
+        if (!filtered.length) {
+          setErrorWallet(true);
+        }
       } catch (err) {
         setErrorWallet(true);
         console.log(err);
@@ -88,6 +116,11 @@ const Overview: NextPage = () => {
       if (lsNewTxs) {
         const newTxs = JSON.parse(lsNewTxs);
         setTxs(newTxs);
+        const filtered = filterDates(newTxs) as any;
+        setFilteredTxs(filtered);
+        if (!filtered.length) {
+          setErrorWallet(true);
+        }
         return;
       }
     } catch (err) {
@@ -99,8 +132,9 @@ const Overview: NextPage = () => {
       .then(async (response) => {
         const data = await response.json();
         setTxs(data.txs);
-        // TODO works but not great
-        if (!data.txs.length) {
+        const filtered = filterDates(data.txs) as any;
+        setFilteredTxs(filtered);
+        if (!filtered.length) {
           setErrorWallet(true);
         }
       })
@@ -108,6 +142,21 @@ const Overview: NextPage = () => {
         setErrorWallet(true);
       });
   }, [router]);
+
+  const filterDates = (
+    allTxs: IHistoryTableTX[],
+    { startDate, endDate } = state
+  ) => {
+    return allTxs.filter((tx) => {
+      if (!startDate || !endDate) {
+        return true;
+      }
+      const nowM = new Date(tx.datetime).getTime();
+      const startDateM = new Date(startDate).getTime();
+      const endDateM = new Date(endDate).getTime();
+      return nowM >= startDateM && nowM < endDateM;
+    });
+  };
 
   const addWallet = () => {
     const auxWallets = wallets as any;
@@ -201,6 +250,10 @@ const Overview: NextPage = () => {
 
   const gotoOverview = (addr: string) => {
     router.push(`/address/${addr}/overview`);
+  };
+
+  const onDateChange = (data: any) => {
+    setFilteredTxs(filterDates(txs, data) as any);
   };
 
   return (
@@ -307,7 +360,7 @@ const Overview: NextPage = () => {
               </div>
             </div>
             <div className={styles.cardButtonContainer}>
-              {router.query.address === "portfolio" || !txs?.length ? (
+              {router.query.address === "portfolio" ? (
                 ""
               ) : (
                 <button
@@ -330,9 +383,36 @@ const Overview: NextPage = () => {
           <div className={styles.tabSelectorContainer}>
             <TabSelector></TabSelector>
           </div>
+          <div className={styles.filtersContainer}>
+            <div className={styles.datepicker}>
+              <DateRangeInput
+                displayFormat={(date) =>
+                  date.toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })
+                }
+                onDatesChange={(data) => {
+                  onDateChange(data);
+                  dispatch({ type: "dateChange", payload: data });
+                }}
+                onFocusChange={(focusedInput) =>
+                  dispatch({ type: "focusChange", payload: focusedInput })
+                }
+                startDate={state.startDate} // Date or null
+                endDate={state.endDate} // Date or null
+                focusedInput={state.focusedInput} // START_DATE, END_DATE or null
+              />
+            </div>
+          </div>
           <div className={styles.historyTableContainer}>
-            {txs?.length ? <HistoryTable txs={txs}></HistoryTable> : ""}
-            {!txs.length && !errorWallet ? (
+            {filteredTxs?.length ? (
+              <HistoryTable txs={filteredTxs}></HistoryTable>
+            ) : (
+              ""
+            )}
+            {!filteredTxs.length && !errorWallet ? (
               <div className={styles.loading}>
                 <Image
                   height="200"
@@ -344,8 +424,10 @@ const Overview: NextPage = () => {
             ) : (
               ""
             )}
-            {!txs.length && errorWallet ? (
-              <div className={styles.errorMessage}>No transactions found</div>
+            {!filteredTxs.length && errorWallet ? (
+              <div className={styles.errorMessage}>
+                No transactions found with the selected filters
+              </div>
             ) : (
               ""
             )}

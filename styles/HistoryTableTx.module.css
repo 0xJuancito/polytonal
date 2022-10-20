@@ -31,6 +31,10 @@
   flex: 0 0 25%;
 }
 
+.actionContainer img {
+  z-index: -999999;
+}
+
 .actionDetailContainer {
   display: flex;
   flex-direction: column;

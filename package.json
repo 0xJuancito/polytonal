@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@datepicker-react/styled": "^2.8.4",
     "ethers": "^5.7.1",
     "harmony-marketplace-sdk": "^0.1.0",
     "lru-cache": "^7.14.0",
@@ -16,7 +17,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-identicons": "^1.2.5",
-    "react-notifications-component": "^4.0.1"
+    "react-notifications-component": "^4.0.1",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@types/node": "18.11.0",
