@@ -412,64 +412,75 @@ const Overview: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className={styles.filtersContainer}>
-            <div className={styles.datepicker}>
-              <DateRangeInput
-                displayFormat={(date) =>
-                  date.toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
-                }
-                onDatesChange={(data) => {
-                  onDateChange(data);
-                  dispatch({ type: "dateChange", payload: data });
-                }}
-                onFocusChange={(focusedInput) =>
-                  dispatch({ type: "focusChange", payload: focusedInput })
-                }
-                startDate={state.startDate} // Date or null
-                endDate={state.endDate} // Date or null
-                focusedInput={state.focusedInput} // START_DATE, END_DATE or null
-              />
-            </div>
-          </div>
-          <div className={styles.historyTableContainer}>
-            {filteredTxs?.length ? (
-              <HistoryTable txs={filteredTxs}></HistoryTable>
-            ) : (
-              ""
-            )}
-            {!filteredTxs.length && !errorWallet ? (
-              <div className={styles.loading}>
-                <Image
-                  height="200"
-                  width="200"
-                  src="/loading.svg"
-                  alt="action"
-                ></Image>
-              </div>
-            ) : (
-              ""
-            )}
-            {!filteredTxs.length && errorWallet ? (
-              <div className={styles.errorMessage}>
-                {txs?.length ? (
-                  <div>
-                    <div>No transactions found with the selected filters</div>
-                    <button
-                      className={styles.cardAddButton}
-                      onClick={() => clearFiltersBtn()}
-                    >
-                      Clear Filters
-                    </button>
+
+          <div>
+            {selectedTab === "history" ? (
+              <div>
+                <div className={styles.filtersContainer}>
+                  <div className={styles.datepicker}>
+                    <DateRangeInput
+                      displayFormat={(date) =>
+                        date.toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      }
+                      onDatesChange={(data) => {
+                        onDateChange(data);
+                        dispatch({ type: "dateChange", payload: data });
+                      }}
+                      onFocusChange={(focusedInput) =>
+                        dispatch({ type: "focusChange", payload: focusedInput })
+                      }
+                      startDate={state.startDate} // Date or null
+                      endDate={state.endDate} // Date or null
+                      focusedInput={state.focusedInput} // START_DATE, END_DATE or null
+                    />
                   </div>
-                ) : (
-                  <div>
-                    <div>No transactions found for this address</div>
-                  </div>
-                )}
+                </div>
+                <div className={styles.historyTableContainer}>
+                  {filteredTxs?.length ? (
+                    <HistoryTable txs={filteredTxs}></HistoryTable>
+                  ) : (
+                    ""
+                  )}
+                  {!filteredTxs.length && !errorWallet ? (
+                    <div className={styles.loading}>
+                      <Image
+                        height="200"
+                        width="200"
+                        src="/loading.svg"
+                        alt="action"
+                      ></Image>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {!filteredTxs.length && errorWallet ? (
+                    <div className={styles.errorMessage}>
+                      {txs?.length ? (
+                        <div>
+                          <div>
+                            No transactions found with the selected filters
+                          </div>
+                          <button
+                            className={styles.cardAddButton}
+                            onClick={() => clearFiltersBtn()}
+                          >
+                            Clear Filters
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <div>No transactions found for this address</div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             ) : (
               ""
