@@ -354,7 +354,7 @@ const Overview: NextPage = () => {
               </div>
             </div>
             <div className={styles.cardButtonContainer}>
-              {router.query.address === "portfolio" ? (
+              {router.query.address === "portfolio" || !txs?.length ? (
                 ""
               ) : (
                 <button
@@ -427,10 +427,6 @@ const Overview: NextPage = () => {
             )}
           </div>
           <div>
-            <div className={styles.cardsContainer}>
-              <PerformanceCard></PerformanceCard>
-              <HistoryCard></HistoryCard>
-            </div>
             <div className={styles.assetsCardContainer}>
               <AssetsCard></AssetsCard>
             </div>
