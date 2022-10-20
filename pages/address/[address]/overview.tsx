@@ -22,6 +22,7 @@ const exampleWallets = [
   "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
   "0x11Fa8B7017C95Bfa372fdBb4547c07EfDe30FBaC",
   "0x90FC9647B848e720Cb8Cc95FA44885B370328002",
+  "0x9806787Ff49beEF4d30285C7Ab1C178F8BAE50f0",
 ];
 
 export interface IToken {
@@ -391,15 +392,22 @@ const Overview: NextPage = () => {
 
       const tokensMap = {} as any;
       allTokens.forEach((token) => {
-        const existingToken = tokensMap[token.symbol];
-        if (existingToken) {
-          tokensMap[token.symbol].balance += token.balance;
-          tokensMap[token.symbol].value += token.value;
+        if (tokensMap[token.symbol]) {
+          tokensMap[token.symbol].balance =
+            Number(tokensMap[token.symbol].balance) + Number(token.balance);
+          tokensMap[token.symbol].value +=
+            Number(tokensMap[token.symbol].value) + Number(token.value);
         } else {
-          tokensMap[token.symbol] = token;
+          tokensMap[token.symbol] = { ...token };
+          tokensMap[token.symbol].value = Number(tokensMap[token.symbol].value);
+          tokensMap[token.symbol].balance = Number(
+            tokensMap[token.symbol].balance
+          );
         }
       });
-      allTokens = Object.values(tokensMap);
+      allTokens = Object.values(tokensMap).sort(
+        (a: any, b: any) => Number(b.value) - Number(a.value)
+      ) as IToken[];
 
       window.localStorage.setItem(
         "portfolio",
