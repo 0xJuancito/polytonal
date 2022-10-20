@@ -51,7 +51,7 @@
 
 ## Known Issues
 
-ℹ️ Sometimes Covalent is down for NFTs responses with an error message: `Failed to connect to upstream third-party service`. When that happens, no NFTs can be shown on the NFTs section.
+ℹ️ Sometimes Covalent is down for NFTs or Tokens responses with an error message: `Failed to connect to upstream third-party service`. When that happens, NFTs or Token won't be able to show on their respective sections.
 
 ## Getting Started
 
