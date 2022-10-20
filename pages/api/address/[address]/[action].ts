@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const { address: queryAddress = "" } = req.query;
+  const { address: queryAddress = "", action: queryAction = "" } = req.query;
 
   if (!queryAddress) {
     res.status(400).json({ error: "no address provided" } as any);
@@ -20,13 +20,16 @@ export default async function handler(
   const address =
     typeof queryAddress === "string" ? queryAddress : queryAddress[0];
 
-  if (ssrCache.has(address)) {
+  const action = typeof queryAction === "string" ? queryAction : queryAction[0];
+
+  const cacheKey = `${address}-${action}`;
+  if (ssrCache.has(cacheKey)) {
     res.setHeader("x-cache", "HIT");
-    const response = ssrCache.get(address);
+    const response = ssrCache.get(cacheKey);
     res.status(200).json(response as any);
   }
 
-  const tx = await getTxs(address);
+  const tx = await getTxs(address, action);
 
   res.status(200).json(tx as any);
 }

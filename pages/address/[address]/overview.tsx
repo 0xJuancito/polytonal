@@ -164,18 +164,36 @@ const Overview: NextPage = () => {
         setTxs(data.txs);
         const filtered = filterDates(data.txs) as any;
         filterDates(data.txs);
+      })
+      .catch((err) => {
+        console.error(err);
+        setErrorWallet(true);
+      });
+
+    fetch(`/api/address/${queryAddress.toLowerCase()}/tokens`)
+      .then(async (response) => {
+        const data = await response.json();
         setTokens(data.tokens);
         calculateAndSetWalletValue(data.tokens);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    fetch(`/api/address/${queryAddress.toLowerCase()}/nfts`)
+      .then(async (response) => {
+        const data = await response.json();
         setNfts(data.nfts);
       })
       .catch((err) => {
-        setErrorWallet(true);
+        console.error(err);
       });
   }, [router]);
 
   const calculateAndSetWalletValue = (tks: IToken[]) => {
     let newValue = 0;
     tks.forEach((token) => {
+      console.log(token.value, Number(token.value));
       newValue += Number(token.value);
     });
     setWalletValue(newValue.toFixed(2));
@@ -199,6 +217,33 @@ const Overview: NextPage = () => {
     if (!filtered.length) {
       setErrorWallet(true);
     }
+  };
+
+  const getTokenSymbolImage = (symbol = "") => {
+    const actionTitles = new Map<string, string>([
+      ["USDC", "/tokens/usdc.webp"],
+      ["ETH", "/tokens/eth.png"],
+      ["ONE", "/tokens/one.png"],
+    ]);
+    const icon = actionTitles.get(symbol || "");
+
+    if (icon) {
+      return (
+        <img
+          height="32"
+          width="32"
+          src={icon}
+          alt="token"
+          className={styles.tokenImage}
+        ></img>
+      );
+    }
+
+    return (
+      <div className={styles.defaultTokenIcon}>
+        <span>{symbol.toUpperCase()?.slice(0, 3)}</span>
+      </div>
+    );
   };
 
   const addWallet = () => {
@@ -239,17 +284,22 @@ const Overview: NextPage = () => {
 
       const tokensMap = {} as any;
       allTokens.forEach((token) => {
-        const existingToken = tokensMap[token.symbol];
-        if (existingToken) {
+        if (tokensMap[token.symbol]) {
           tokensMap[token.symbol].balance =
             Number(tokensMap[token.symbol].balance) + Number(token.balance);
           tokensMap[token.symbol].value +=
             Number(tokensMap[token.symbol].value) + Number(token.value);
         } else {
-          tokensMap[token.symbol] = token;
+          tokensMap[token.symbol] = { ...token };
+          tokensMap[token.symbol].value = Number(tokensMap[token.symbol].value);
+          tokensMap[token.symbol].balance = Number(
+            tokensMap[token.symbol].balance
+          );
         }
       });
-      allTokens = Object.values(tokensMap);
+      allTokens = Object.values(tokensMap).sort(
+        (a: any, b: any) => Number(b.value) - Number(a.value)
+      ) as IToken[];
 
       window.localStorage.setItem(
         "portfolio",
@@ -343,6 +393,7 @@ const Overview: NextPage = () => {
       return;
     }
 
+    setSelectedTab("history");
     setErrorWallet(false);
     setSearchValue("");
     router.push(`/address/${searchValue}/overview`);
@@ -603,7 +654,7 @@ const Overview: NextPage = () => {
                     <path
                       d="M7 11h15a3 3 0 013 3v8a3 3 0 01-3 3H8a1 1 0 01-1-1V11z"
                       stroke="#fff"
-                      stroke-width="2"
+                      strokeWidth="2"
                     ></path>
                     <path
                       d="M6 9a2 2 0 012-2h12a2 2 0 012 2H6z"
@@ -629,22 +680,21 @@ const Overview: NextPage = () => {
                     <div className={styles.tokensTableRow} key={id}>
                       <div className={styles.tokensTableRowCol}>
                         <div className={styles.tokensAssetContainer}>
-                          <img
-                            height="32"
-                            width="32"
-                            src={token.icon}
-                            alt="token"
-                            className={styles.tokensTokenImage}
-                          ></img>
+                          {getTokenSymbolImage(token.symbol)}
                           <div>{token.symbol}</div>
                         </div>
                       </div>
                       <div className={styles.tokensTableRowCol}>
-                        <div>${token.price}</div>
+                        <div>
+                          {token.price !== "N/A" ? `$${token.price}` : "N/A"}
+                        </div>
                       </div>
                       <div className={styles.tokensTableRowCol}>
                         <div>
-                          {token.balance} {token.symbol}
+                          {token.balance}{" "}
+                          <span className={styles.tokensAssetSymbol}>
+                            {token.symbol}
+                          </span>
                         </div>
                       </div>
                       <div className={styles.tokensTableRowCol}>
@@ -671,7 +721,7 @@ const Overview: NextPage = () => {
                     <img
                       height="184"
                       width="184"
-                      src={nft.image}
+                      src={nft.image || "/default.png"}
                       alt="token"
                       className={styles.nftsImage}
                     ></img>

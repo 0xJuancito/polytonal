@@ -112,7 +112,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
       ["ETH", "/tokens/eth.png"],
       ["ONE", "/tokens/one.png"],
     ]);
-    const icon = actionTitles.get(tx.hrc20?.symbol || "");
+    const icon = actionTitles.get(symbol || "");
 
     if (icon) {
       return (
@@ -128,7 +128,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
 
     return (
       <div className={styles.defaultTokenIcon}>
-        <span>{tx.hrc20?.symbol?.toUpperCase()?.slice(0, 3)}</span>
+        <span>{symbol.toUpperCase()?.slice(0, 3)}</span>
       </div>
     );
   };
@@ -283,7 +283,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
         <div className={styles.tokenContainer}>
           {tx.action === "Transfer" && tx.hrc20 && !tx.nft ? (
             <div className={styles.tokenInnerContainer}>
-              {getTokenSymbolImage()}
+              {getTokenSymbolImage(tx.hrc20?.symbol)}
               <div className={styles.tokenDetailContainer}>
                 <div className={getTokenDiffClass()}>{getTokenDiff()}</div>
                 <div className={styles.tokenValue}>{getPrice()}</div>

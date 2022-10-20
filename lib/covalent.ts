@@ -2,6 +2,7 @@ import { IHistoryTableTX } from "./types";
 import { utils, BigNumber } from "ethers";
 import { TxItem, TxResponse } from "./covalent.types";
 import { INFT, IToken } from "@pages/address/[address]/overview";
+import { BalancesResponse } from "./covalent-balance.types";
 
 const APIKEY = process.env.COVALENT_API_KEY;
 const baseURL = "https://api.covalenthq.com/v1";
@@ -18,11 +19,71 @@ export interface IHistoryTableResponse {
   nfts: INFT[];
 }
 
-export const getTxs = async (
+const getBalances = async (
   address: string,
-  pageNumber = 0,
-  pageSize = 100
-): Promise<IHistoryTableResponse> => {
+  action: string
+): Promise<{ tokens: IToken[]; nfts: INFT[] }> => {
+  let newTokens = [] as IToken[];
+  let newNfts = [] as INFT[];
+
+  const qsCurrency = `quote-currency=USD`;
+  const qsFormat = `format=JSON`;
+  const nft = action === "nfts" ? `nft=true` : `nft=false`;
+  const noNftFetch = `no-nft-fetch=false`;
+
+  const qs = `${qsCurrency}&${qsFormat}&${nft}&${noNftFetch}&key=${APIKEY}`;
+  const url = new URL(
+    `${baseURL}/${chainId}/address/${address}/balances_v2/?${qs}`
+  );
+
+  const response = await fetch(url);
+  const result = (await response.json()) as BalancesResponse;
+
+  if (action === "tokens") {
+    newTokens = result.data?.items
+      .filter((item) => item.type === "cryptocurrency")
+      .map((item) => {
+        let balance: number | string =
+          Number(item.balance) / Math.pow(10, item.contract_decimals);
+        if (balance < 10) {
+          balance = balance.toFixed(4);
+        } else {
+          balance = balance.toFixed(0);
+        }
+
+        return {
+          icon: "",
+          symbol: item.contract_ticker_symbol,
+          price: item.quote_rate?.toString() || "N/A",
+          balance: balance as string,
+          value: item.quote?.toFixed(2) || "N/A",
+        };
+      });
+  }
+
+  result.data?.items.forEach((item) => {
+    if (item.type !== "nft" && !item.nft_data) {
+      return;
+    }
+
+    item.nft_data.forEach((nft) => {
+      newNfts.push({
+        image: nft.external_data?.image,
+        collection: item.contract_name,
+        name: nft.external_data?.name,
+      });
+    });
+  });
+
+  return {
+    tokens: newTokens?.filter((token) => token) || [],
+    nfts: newNfts?.filter((nft) => nft) || [],
+  };
+};
+
+const findTxs = async (address: string): Promise<IHistoryTableTX[]> => {
+  const pageNumber = 0;
+  const pageSize = 200;
   const qsCurrency = `quote-currency=USD`;
   const qsFormat = `format=JSON`;
   const qsOrder = `block-signed-at-asc=false`;
@@ -40,28 +101,32 @@ export const getTxs = async (
   const data = result.data as TxResponse;
 
   const txHistory = data.items.map((item) => parseTx(item, data.address));
+  return txHistory.filter((tx) => tx) as IHistoryTableTX[];
+};
+
+export const getTxs = async (
+  address: string,
+  action: string
+): Promise<IHistoryTableResponse> => {
+  let txs = [] as any;
+  let tokens = [] as any;
+  let nfts = [] as any;
+
+  if (action === "txs") {
+    txs = await findTxs(address);
+  }
+  if (action === "nfts") {
+    nfts = (await getBalances(address, "nfts")).nfts;
+  }
+  if (action === "tokens") {
+    tokens = (await getBalances(address, "tokens")).tokens;
+  }
 
   return {
-    wallet: data.address,
-    txs: txHistory.filter((tx) => tx) as IHistoryTableTX[],
-    tokens: [],
-    nfts: [],
-    // tokens: [
-    //   {
-    //     icon: "/tokens/one.png",
-    //     symbol: "ONE",
-    //     price: "0.9999",
-    //     balance: "152.97",
-    //     value: "152.23",
-    //   },
-    // ],
-    // nfts: [
-    //   {
-    //     image: "/default.png",
-    //     collection: "Devs for Revolution",
-    //     name: "Dev #12342",
-    //   },
-    // ],
+    wallet: txs[0]?.address || address,
+    txs,
+    tokens: tokens,
+    nfts: nfts,
   };
 };
 
