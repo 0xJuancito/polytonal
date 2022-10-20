@@ -27,6 +27,7 @@
 
 ### Extra features
 
+- Support both Harmony One (one...) and Ethereum (0x...) addresses
 - Display HRC20 tokens balances detail for all tokens the user has
 - Display the total price of the HRC20 assets the user has
 - Display a collection of NFTs owned by the user
