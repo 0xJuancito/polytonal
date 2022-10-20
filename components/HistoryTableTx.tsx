@@ -1,11 +1,12 @@
 import React, { useCallback, memo, FC, useEffect, useState } from "react";
 import { HttpProvider } from "@harmony-js/network";
-import { HRC721, Key } from "harmony-marketplace-sdk";
+import { HRC721, HRC1155, Key } from "harmony-marketplace-sdk";
 import styles from "@styles/HistoryTableTx.module.css";
 import { IHistoryTableTX } from "@lib/types";
 import Image from "next/image";
 import Identicon from "react-identicons";
-import ABI from "@lib/abis/hrc721.json";
+import ABI721 from "@lib/abis/hrc721.json";
+import ABI1155 from "@lib/abis/hrc1155.json";
 
 interface Props {
   tx: IHistoryTableTX;
@@ -16,6 +17,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   const [nftImage, setNftImage] = useState("/nft.webp");
   const [nftUri, setNftUri] = useState("");
   const [loadingNft, setLoadingNft] = useState(false);
+  const [nftType, setNftType] = useState("hr721");
 
   useEffect(() => {
     if (!tx.nft || loadingNft) {
@@ -24,27 +26,49 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
     setLoadingNft(true);
 
     const key = new Key(new HttpProvider("https://api.harmony.one"));
-    const contract = new HRC721(tx.nft.contractAddress, ABI, key);
+    const contract721 = new HRC721(tx.nft.contractAddress, ABI721, key);
+    const contract1155 = new HRC1155(tx.nft.contractAddress, ABI1155, key);
 
     let url = "";
-    contract
-      .tokenURI(tx.nft.tokenId)
-      .then((uri) => {
-        url = uri;
-        return fetch(uri);
-      })
-      .then(async (response) => {
-        const data = await response.json();
-        const imageUrl = data.image;
-        if (imageUrl) {
-          setNftUri(url);
-          setNftImage(imageUrl);
+    if (nftType === "hr721") {
+      contract721
+        .tokenURI(tx.nft.tokenId)
+        .then((uri) => {
+          url = uri;
+          return fetch(uri);
+        })
+        .then(async (response) => {
+          const data = await response.json();
+          const imageUrl = data.image;
+          if (imageUrl) {
+            setNftUri(url);
+            setNftImage(imageUrl);
+            setLoadingNft(false);
+          }
+        })
+        .catch(() => {
           setLoadingNft(false);
-        }
-      })
-      .catch(() => {
-        setLoadingNft(false);
-      });
+        });
+    } else {
+      contract1155
+        .tokenURI(tx.nft.tokenId)
+        .then((uri) => {
+          url = uri;
+          return fetch(uri);
+        })
+        .then(async (response) => {
+          const data = await response.json();
+          const imageUrl = data.image;
+          if (imageUrl) {
+            setNftUri(url);
+            setNftImage(imageUrl);
+            setLoadingNft(false);
+          }
+        })
+        .catch(() => {
+          setLoadingNft(false);
+        });
+    }
   }, []);
 
   const getActionIcon = () => {
