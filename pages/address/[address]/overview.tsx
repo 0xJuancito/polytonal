@@ -485,6 +485,65 @@ const Overview: NextPage = () => {
             ) : (
               ""
             )}
+            {selectedTab === "tokens" ? (
+              <div className={styles.tokensContainer}>
+                <div className={styles.tokensWalletContainer}>
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect width="32" height="32" rx="2" fill="#2558D9"></rect>
+                    <path
+                      d="M7 11h15a3 3 0 013 3v8a3 3 0 01-3 3H8a1 1 0 01-1-1V11z"
+                      stroke="#fff"
+                      stroke-width="2"
+                    ></path>
+                    <path
+                      d="M6 9a2 2 0 012-2h12a2 2 0 012 2H6z"
+                      fill="#fff"
+                    ></path>
+                  </svg>
+                  <div className={styles.tokensWallet}>Wallet · $321.01</div>
+                </div>
+                <div className={styles.tokensTable}>
+                  <div className={styles.tokensTableHeader}>
+                    <div className={styles.tokensTableHeaderCol}>ASSET</div>
+                    <div className={styles.tokensTableHeaderCol}>PRICE</div>
+                    <div className={styles.tokensTableHeaderCol}>BALANCE</div>
+                    <div className={styles.tokensTableHeaderCol}>VALUE</div>
+                  </div>
+                  <div className={styles.tokensTableRow}>
+                    <div className={styles.tokensTableRowCol}>
+                      <div className={styles.tokensAssetContainer}>
+                        <img
+                          height="32"
+                          width="32"
+                          src={"/tokens/eth.png"}
+                          alt="token"
+                          className={styles.tokensTokenImage}
+                        ></img>
+                        <div>USD Coin</div>
+                      </div>
+                    </div>
+                    <div className={styles.tokensTableRowCol}>
+                      <div>$0.9999</div>
+                    </div>
+                    <div className={styles.tokensTableRowCol}>
+                      <div>152.97 USDC</div>
+                    </div>
+                    <div className={styles.tokensTableRowCol}>
+                      <div>$152.23</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            {selectedTab === "nfts" ? <div></div> : ""}
           </div>
         </main>
       </div>

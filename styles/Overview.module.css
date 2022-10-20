@@ -269,3 +269,64 @@
   border-bottom-style: solid;
   cursor: pointer;
 }
+
+/* tokens */
+
+.tokensContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 0;
+}
+
+.tokensWalletContainer {
+  display: flex;
+  gap: 13px;
+}
+
+.tokensWallet {
+  font-size: 40px;
+  line-height: 30px;
+}
+
+.tokensTable {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.tokensTableHeader {
+  display: flex;
+  font-size: 11px;
+  line-height: 12px;
+  font-weight: 500;
+  border-color: rgb(45, 45, 45);
+  border-width: 1px;
+  border-bottom-style: solid;
+  padding-bottom: 5px;
+}
+
+.tokensTableHeaderCol {
+  flex: 0 0 25%;
+}
+
+.tokensTableRow {
+  display: flex;
+  padding: 15px 0;
+  border-color: rgb(45, 45, 45);
+  border-width: 1px;
+  border-bottom-style: solid;
+}
+
+.tokensTableRowCol {
+  display: flex;
+  align-items: center;
+  flex: 0 0 25%;
+  font-weight: 300;
+}
+
+.tokensAssetContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 400;
+}
