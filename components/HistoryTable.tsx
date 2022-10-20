@@ -1,7 +1,7 @@
 import styles from "@styles/HistoryTable.module.css";
 import { IHistoryTableTX } from "@lib/types";
 import HistoryTableTx from "./HistoryTableTx";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 interface TxDay {
   date: string;
@@ -52,4 +52,4 @@ const HistoryTable: FC<Props> = ({ txs }) => {
   );
 };
 
-export default HistoryTable;
+export default memo(HistoryTable);

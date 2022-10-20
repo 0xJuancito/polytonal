@@ -437,4 +437,5 @@ const Overview: NextPage = () => {
   );
 };
 
-export default Overview;
+// export default Overview;
+export default memo(Overview);
