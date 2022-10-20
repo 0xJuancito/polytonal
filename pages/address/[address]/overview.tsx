@@ -16,6 +16,7 @@ import { DateRangeInput } from "@datepicker-react/styled";
 import { IHistoryTableTX } from "@lib/types";
 
 const exampleWallets = [
+  "0xd7E0944b3166E0b7e4c3616d0c13A2fC5627cFA5",
   "0x8D1D23dA965D33C2EBCf49ddaC95e8Da9Ec1fFa7",
   "0x6D95A4341fF6321af10983EDD40D6a333F636258",
   "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
@@ -193,7 +194,6 @@ const Overview: NextPage = () => {
   const calculateAndSetWalletValue = (tks: IToken[]) => {
     let newValue = 0;
     tks.forEach((token) => {
-      console.log(token.value, Number(token.value));
       newValue += Number(token.value);
     });
     setWalletValue(newValue.toFixed(2));
