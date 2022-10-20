@@ -27,6 +27,7 @@
 
 ### Extra features
 
+- Unified portfolio for transactions, balances and NFTs
 - Support both Harmony One (one...) and Ethereum (0x...) addresses
 - Display HRC20 tokens balances detail for all tokens the user has
 - Display the total price of the HRC20 assets the user has
@@ -49,9 +50,18 @@
 <img width="45%" alt="Screen Shot 2022-10-20 at 11 38 03" src="https://user-images.githubusercontent.com/12957692/196979596-22a2eb9c-f64e-4702-b805-b8740db2f351.png">
 </p>
 
+## Wallet Examples
+
+- [Wallet with HRC20 interactions](https://polytonal.vercel.app/address/0x6e46f1e34fc46c6937741c3b262984615c13177f/overview)
+- [Wallet with recent HRC721 NFT game interactions](https://polytonal.vercel.app/address/0x01aa1d1131Ee8671A7864CD5bccD772B5479fE59/overview)
+- [Wallet with HRC1155 transfers](https://polytonal.vercel.app/address/0x2E3B19E64eA050d703a0282a6DD2AFE8952fe70b/overview)
+- [vitalik.eth wallet](https://polytonal.vercel.app/address/0xd8da6bf26964af9d7eed9e03e53415d37aa96045/overview)
+
 ## Known Issues
 
 ℹ️ Sometimes Covalent is down for NFTs or Tokens responses with an error message: `Failed to connect to upstream third-party service`. When that happens, NFTs or Token won't be able to show on their respective sections.
+
+ℹ️ For some addresses with lots of assets/transactions, Covalent is not able to respondo from their API
 
 ## Getting Started
 
