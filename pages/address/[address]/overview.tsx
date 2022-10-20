@@ -333,22 +333,26 @@ const Overview: NextPage = () => {
 
       const tokensMap = {} as any;
       allTokens.forEach((token) => {
-        if (tokensMap[token.symbol]) {
-          tokensMap[token.symbol].balance =
-            Number(tokensMap[token.symbol].balance) + Number(token.balance);
-          tokensMap[token.symbol].value +=
-            Number(tokensMap[token.symbol].value) + Number(token.value);
+        const symbol = token.symbol;
+        const mapItem = tokensMap[symbol];
+
+        if (mapItem) {
+          mapItem.balance = Number(mapItem.balance) + Number(token.balance);
+          mapItem.value = Number(mapItem.value) + Number(token.value);
         } else {
-          tokensMap[token.symbol] = { ...token };
-          tokensMap[token.symbol].value = Number(tokensMap[token.symbol].value);
-          tokensMap[token.symbol].balance = Number(
-            tokensMap[token.symbol].balance
-          );
+          tokensMap[symbol] = { ...token };
+          const mapItem = tokensMap[symbol];
+          mapItem.value = Number(mapItem.value);
+          mapItem.balance = Number(mapItem.balance);
         }
       });
-      allTokens = Object.values(tokensMap).sort(
-        (a: any, b: any) => Number(b.value) - Number(a.value)
-      ) as IToken[];
+      allTokens = Object.values(tokensMap as Object)
+        .sort((a: any, b: any) => Number(b.value) - Number(a.value))
+        .map((token) => ({
+          ...token,
+          value: token.value.toFixed(2),
+          balance: token.balance.toFixed(2),
+        })) as IToken[];
 
       window.localStorage.setItem(
         "portfolio",
@@ -392,22 +396,26 @@ const Overview: NextPage = () => {
 
       const tokensMap = {} as any;
       allTokens.forEach((token) => {
-        if (tokensMap[token.symbol]) {
-          tokensMap[token.symbol].balance =
-            Number(tokensMap[token.symbol].balance) + Number(token.balance);
-          tokensMap[token.symbol].value +=
-            Number(tokensMap[token.symbol].value) + Number(token.value);
+        const symbol = token.symbol;
+        const mapItem = tokensMap[symbol];
+
+        if (mapItem) {
+          mapItem.balance = Number(mapItem.balance) + Number(token.balance);
+          mapItem.value = Number(mapItem.value) + Number(token.value);
         } else {
-          tokensMap[token.symbol] = { ...token };
-          tokensMap[token.symbol].value = Number(tokensMap[token.symbol].value);
-          tokensMap[token.symbol].balance = Number(
-            tokensMap[token.symbol].balance
-          );
+          tokensMap[symbol] = { ...token };
+          const mapItem = tokensMap[symbol];
+          mapItem.value = Number(mapItem.value);
+          mapItem.balance = Number(mapItem.balance);
         }
       });
-      allTokens = Object.values(tokensMap).sort(
-        (a: any, b: any) => Number(b.value) - Number(a.value)
-      ) as IToken[];
+      allTokens = Object.values(tokensMap as Object)
+        .sort((a: any, b: any) => Number(b.value) - Number(a.value))
+        .map((token) => ({
+          ...token,
+          value: token.value.toFixed(2),
+          balance: token.balance.toFixed(2),
+        })) as IToken[];
 
       window.localStorage.setItem(
         "portfolio",
