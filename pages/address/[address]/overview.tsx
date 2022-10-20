@@ -21,6 +21,20 @@ const exampleWallets = [
   "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
 ];
 
+export interface IToken {
+  icon: string;
+  symbol: string;
+  price: string;
+  balance: string;
+  value: string;
+}
+
+export interface INFT {
+  image: string;
+  collection: string;
+  name: string;
+}
+
 const initialState = {
   startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
   endDate: new Date(),
@@ -51,6 +65,9 @@ const Overview: NextPage = () => {
   const [filteredTxs, setFilteredTxs] = useState([]);
   const [address, setAddress] = useState("");
 
+  const [tokens, setTokens] = useState([]);
+  const [nfts, setNfts] = useState([]);
+
   const [wallets, setWallets] = useState([]);
 
   const [searchValue, setSearchValue] = useState("");
@@ -60,6 +77,8 @@ const Overview: NextPage = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [selectedTab, setSelectedTab] = useState("history");
+
+  const [walletValue, setWalletValue] = useState("0.00");
 
   useEffect(() => {
     try {
@@ -85,6 +104,9 @@ const Overview: NextPage = () => {
     setAddress(queryAddress.toLowerCase());
     setTxs([]);
     setFilteredTxs([]);
+    setTokens([]);
+    calculateAndSetWalletValue([]);
+    setNfts([]);
 
     try {
       const lsNewWallets: any = window.localStorage.getItem("wallets") || "[]";
@@ -98,9 +120,16 @@ const Overview: NextPage = () => {
     if (queryAddress === "portfolio") {
       try {
         const lsNewTxs: any = window.localStorage.getItem("portfolio");
-        const newTxs = JSON.parse(lsNewTxs);
+        const {
+          txs: newTxs,
+          tokens: newsTokens,
+          nfts: newsNfts,
+        } = JSON.parse(lsNewTxs);
         setTxs(newTxs);
         filterDates(newTxs);
+        setTokens(newsTokens);
+        calculateAndSetWalletValue(newsTokens);
+        setNfts(newsNfts);
       } catch (err) {
         setErrorWallet(true);
         console.log(err);
@@ -112,9 +141,16 @@ const Overview: NextPage = () => {
         queryAddress.toLowerCase()
       );
       if (lsNewTxs) {
-        const newTxs = JSON.parse(lsNewTxs);
+        const {
+          txs: newTxs,
+          tokens: newsTokens,
+          nfts: newsNfts,
+        } = JSON.parse(lsNewTxs);
         setTxs(newTxs);
         filterDates(newTxs);
+        setTokens(newsTokens);
+        calculateAndSetWalletValue(newsTokens);
+        setNfts(newsNfts);
         return;
       }
     } catch (err) {
@@ -128,11 +164,22 @@ const Overview: NextPage = () => {
         setTxs(data.txs);
         const filtered = filterDates(data.txs) as any;
         filterDates(data.txs);
+        setTokens(data.tokens);
+        calculateAndSetWalletValue(data.tokens);
+        setNfts(data.nfts);
       })
       .catch((err) => {
         setErrorWallet(true);
       });
   }, [router]);
+
+  const calculateAndSetWalletValue = (tks: IToken[]) => {
+    let newValue = 0;
+    tks.forEach((token) => {
+      newValue += Number(token.value);
+    });
+    setWalletValue(newValue.toFixed(2));
+  };
 
   const filterDates = (
     allTxs: IHistoryTableTX[],
@@ -161,22 +208,53 @@ const Overview: NextPage = () => {
     }
     const newWallets = [...auxWallets, address.toLowerCase()] as any;
     setWallets(newWallets);
-    window.localStorage.setItem(address.toLowerCase(), JSON.stringify(txs));
+    window.localStorage.setItem(
+      address.toLowerCase(),
+      JSON.stringify({ txs, tokens, nfts })
+    );
     window.localStorage.setItem("wallets", JSON.stringify(newWallets));
 
     try {
       let allTxs: any = [];
+      let allNfts: INFT[] = [];
+      let allTokens: IToken[] = [];
+
       newWallets.forEach((wallet: string) => {
         const lsOtherWallet =
           window.localStorage.getItem(wallet.toLowerCase()) || "[]";
-        const otherWallet = JSON.parse(lsOtherWallet);
-        allTxs = allTxs.concat(otherWallet);
+        const {
+          txs: otherTxs,
+          tokens: otherTokens,
+          nfts: otherNfts,
+        } = JSON.parse(lsOtherWallet);
+
+        allTxs = allTxs.concat(otherTxs);
+        allNfts = allNfts.concat(otherNfts);
+        allTokens = allTokens.concat(otherTokens);
       });
       allTxs = allTxs.sort(
         (a: any, b: any) =>
           new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
       );
-      window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
+
+      const tokensMap = {} as any;
+      allTokens.forEach((token) => {
+        const existingToken = tokensMap[token.symbol];
+        if (existingToken) {
+          tokensMap[token.symbol].balance =
+            Number(tokensMap[token.symbol].balance) + Number(token.balance);
+          tokensMap[token.symbol].value +=
+            Number(tokensMap[token.symbol].value) + Number(token.value);
+        } else {
+          tokensMap[token.symbol] = token;
+        }
+      });
+      allTokens = Object.values(tokensMap);
+
+      window.localStorage.setItem(
+        "portfolio",
+        JSON.stringify({ txs: allTxs, tokens: allTokens, nfts: allNfts })
+      );
     } catch (err) {
       console.error(err);
     }
@@ -192,17 +270,43 @@ const Overview: NextPage = () => {
 
     try {
       let allTxs: any = [];
+      let allNfts: INFT[] = [];
+      let allTokens: IToken[] = [];
+
       newWallets.forEach((wallet: string) => {
         const lsOtherWallet =
           window.localStorage.getItem(wallet.toLowerCase()) || "[]";
-        const otherWallet = JSON.parse(lsOtherWallet);
-        allTxs = allTxs.concat(otherWallet);
+        const {
+          txs: otherTxs,
+          tokens: otherTokens,
+          nfts: otherNfts,
+        } = JSON.parse(lsOtherWallet);
+
+        allTxs = allTxs.concat(otherTxs);
+        allNfts = allNfts.concat(otherNfts);
+        allTokens = allTokens.concat(otherTokens);
       });
       allTxs = allTxs.sort(
         (a: any, b: any) =>
           new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
       );
-      window.localStorage.setItem("portfolio", JSON.stringify(allTxs));
+
+      const tokensMap = {} as any;
+      allTokens.forEach((token) => {
+        const existingToken = tokensMap[token.symbol];
+        if (existingToken) {
+          tokensMap[token.symbol].balance += token.balance;
+          tokensMap[token.symbol].value += token.value;
+        } else {
+          tokensMap[token.symbol] = token;
+        }
+      });
+      allTokens = Object.values(tokensMap);
+
+      window.localStorage.setItem(
+        "portfolio",
+        JSON.stringify({ txs: allTxs, tokens: allTokens, nfts: allNfts })
+      );
     } catch (err) {
       console.error(err);
     }
@@ -506,38 +610,55 @@ const Overview: NextPage = () => {
                       fill="#fff"
                     ></path>
                   </svg>
-                  <div className={styles.tokensWallet}>Wallet · $321.01</div>
+                  <div className={styles.tokensWallet}>
+                    Wallet · ${walletValue}
+                  </div>
                 </div>
                 <div className={styles.tokensTable}>
-                  <div className={styles.tokensTableHeader}>
-                    <div className={styles.tokensTableHeaderCol}>ASSET</div>
-                    <div className={styles.tokensTableHeaderCol}>PRICE</div>
-                    <div className={styles.tokensTableHeaderCol}>BALANCE</div>
-                    <div className={styles.tokensTableHeaderCol}>VALUE</div>
-                  </div>
-                  <div className={styles.tokensTableRow}>
-                    <div className={styles.tokensTableRowCol}>
-                      <div className={styles.tokensAssetContainer}>
-                        <img
-                          height="32"
-                          width="32"
-                          src={"/tokens/eth.png"}
-                          alt="token"
-                          className={styles.tokensTokenImage}
-                        ></img>
-                        <div>USD Coin</div>
+                  {tokens.length ? (
+                    <div className={styles.tokensTableHeader}>
+                      <div className={styles.tokensTableHeaderCol}>ASSET</div>
+                      <div className={styles.tokensTableHeaderCol}>PRICE</div>
+                      <div className={styles.tokensTableHeaderCol}>BALANCE</div>
+                      <div className={styles.tokensTableHeaderCol}>VALUE</div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {tokens.map((token: IToken, id) => (
+                    <div className={styles.tokensTableRow} key={id}>
+                      <div className={styles.tokensTableRowCol}>
+                        <div className={styles.tokensAssetContainer}>
+                          <img
+                            height="32"
+                            width="32"
+                            src={token.icon}
+                            alt="token"
+                            className={styles.tokensTokenImage}
+                          ></img>
+                          <div>{token.symbol}</div>
+                        </div>
+                      </div>
+                      <div className={styles.tokensTableRowCol}>
+                        <div>${token.price}</div>
+                      </div>
+                      <div className={styles.tokensTableRowCol}>
+                        <div>
+                          {token.balance} {token.symbol}
+                        </div>
+                      </div>
+                      <div className={styles.tokensTableRowCol}>
+                        <div>${token.value}</div>
                       </div>
                     </div>
-                    <div className={styles.tokensTableRowCol}>
-                      <div>$0.9999</div>
+                  ))}
+                  {!tokens.length ? (
+                    <div className={styles.errorMessageTokens}>
+                      There are no tokens in this wallet
                     </div>
-                    <div className={styles.tokensTableRowCol}>
-                      <div>152.97 USDC</div>
-                    </div>
-                    <div className={styles.tokensTableRowCol}>
-                      <div>$152.23</div>
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             ) : (
@@ -545,21 +666,30 @@ const Overview: NextPage = () => {
             )}
             {selectedTab === "nfts" ? (
               <div className={styles.nftsContainer}>
-                <div className={styles.nftsCard}>
-                  <img
-                    height="184"
-                    width="184"
-                    src={"/default.png"}
-                    alt="token"
-                    className={styles.nftsImage}
-                  ></img>
-                  <div className={styles.nftsDetailContainer}>
-                    <div className={styles.nftsCollection}>
-                      Devs for Revolution
+                {nfts.map((nft: INFT, id) => (
+                  <div className={styles.nftsCard} key={id}>
+                    <img
+                      height="184"
+                      width="184"
+                      src={nft.image}
+                      alt="token"
+                      className={styles.nftsImage}
+                    ></img>
+                    <div className={styles.nftsDetailContainer}>
+                      <div className={styles.nftsCollection}>
+                        {nft.collection}
+                      </div>
+                      <div className={styles.nftsName}>{nft.name}</div>
                     </div>
-                    <div className={styles.nftsName}>Dev #12342</div>
                   </div>
-                </div>
+                ))}
+                {!nfts.length ? (
+                  <div className={styles.errorMessageNfts}>
+                    There are no NFTs in this wallet
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             ) : (
               ""

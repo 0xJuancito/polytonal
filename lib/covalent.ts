@@ -1,6 +1,7 @@
 import { IHistoryTableTX } from "./types";
 import { utils, BigNumber } from "ethers";
 import { TxItem, TxResponse } from "./covalent.types";
+import { INFT, IToken } from "@pages/address/[address]/overview";
 
 const APIKEY = process.env.COVALENT_API_KEY;
 const baseURL = "https://api.covalenthq.com/v1";
@@ -13,12 +14,14 @@ const sameAddress = (addr1: string, addr2: string) => {
 export interface IHistoryTableResponse {
   wallet: string;
   txs: IHistoryTableTX[];
+  tokens: IToken[];
+  nfts: INFT[];
 }
 
 export const getTxs = async (
   address: string,
   pageNumber = 0,
-  pageSize = 1000
+  pageSize = 100
 ): Promise<IHistoryTableResponse> => {
   const qsCurrency = `quote-currency=USD`;
   const qsFormat = `format=JSON`;
@@ -41,6 +44,24 @@ export const getTxs = async (
   return {
     wallet: data.address,
     txs: txHistory.filter((tx) => tx) as IHistoryTableTX[],
+    tokens: [],
+    nfts: [],
+    // tokens: [
+    //   {
+    //     icon: "/tokens/one.png",
+    //     symbol: "ONE",
+    //     price: "0.9999",
+    //     balance: "152.97",
+    //     value: "152.23",
+    //   },
+    // ],
+    // nfts: [
+    //   {
+    //     image: "/default.png",
+    //     collection: "Devs for Revolution",
+    //     name: "Dev #12342",
+    //   },
+    // ],
   };
 };
 

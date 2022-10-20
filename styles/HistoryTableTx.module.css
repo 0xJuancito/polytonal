@@ -18,6 +18,7 @@
   border-color: rgb(45, 45, 50);
   border-width: 1px;
   border-bottom-style: solid;
+  max-height: 62px;
 }
 
 .txContainer.active .txMainContainer {
@@ -139,6 +140,7 @@
   border-radius: 10px;
   padding: 2px 8px;
   margin-top: -1px;
+  max-height: 24px;
 }
 
 .walletAddressImageContainer {
@@ -185,6 +187,7 @@
   background-color: rgb(35, 35, 35);
   border-radius: 10px;
   padding: 2px 8px;
+  max-height: 24px;
 }
 
 .recipientAddressImageContainer {
