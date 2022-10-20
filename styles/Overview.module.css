@@ -330,3 +330,36 @@
   gap: 10px;
   font-weight: 400;
 }
+
+/* nfts */
+
+.nftsContainer {
+  margin-top: 25px;
+  display: flex;
+  gap: 30px;
+}
+.nftsCard {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 15px;
+  border-color: rgb(45, 45, 45);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+.nftsImage {
+  border-radius: 10px;
+}
+.nftsDetailContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nftsCollection {
+  font-size: 13px;
+  font-weight: 300;
+}
+.nftsName {
+  font-size: 17px;
+}

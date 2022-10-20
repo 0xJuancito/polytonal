@@ -543,7 +543,27 @@ const Overview: NextPage = () => {
             ) : (
               ""
             )}
-            {selectedTab === "nfts" ? <div></div> : ""}
+            {selectedTab === "nfts" ? (
+              <div className={styles.nftsContainer}>
+                <div className={styles.nftsCard}>
+                  <img
+                    height="184"
+                    width="184"
+                    src={"/default.png"}
+                    alt="token"
+                    className={styles.nftsImage}
+                  ></img>
+                  <div className={styles.nftsDetailContainer}>
+                    <div className={styles.nftsCollection}>
+                      Devs for Revolution
+                    </div>
+                    <div className={styles.nftsName}>Dev #12342</div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </main>
       </div>
