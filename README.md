@@ -52,9 +52,9 @@
 
 ## Wallet Examples
 
+- [Wallet with HRC20 interactions](https://polytonal.vercel.app/address/0x6e46f1e34fc46c6937741c3b262984615c13177f/overview)
 - [Wallet with recent HRC721 NFT game interactions](https://polytonal.vercel.app/address/0x01aa1d1131Ee8671A7864CD5bccD772B5479fE59/overview)
 - [Wallet with HRC1155 transfers](https://polytonal.vercel.app/address/0x2E3B19E64eA050d703a0282a6DD2AFE8952fe70b/overview)
-- [Wallet with HRC20 interactions](https://polytonal.vercel.app/address/0x6e46f1e34fc46c6937741c3b262984615c13177f/overview)
 - [vitalik.eth wallet](https://polytonal.vercel.app/address/0xd8da6bf26964af9d7eed9e03e53415d37aa96045/overview)
 
 ## Known Issues
