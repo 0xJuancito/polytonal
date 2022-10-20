@@ -49,10 +49,9 @@
 <img width="45%" alt="Screen Shot 2022-10-20 at 11 38 03" src="https://user-images.githubusercontent.com/12957692/196979596-22a2eb9c-f64e-4702-b805-b8740db2f351.png">
 </p>
 
+## Known Issues
 
-
-
-
+ℹ️ Sometimes Covalent is down for NFTs responses with an error message: `Failed to connect to upstream third-party service`. When that happens, no NFTs can be shown on the NFTs section.
 
 ## Getting Started
 
