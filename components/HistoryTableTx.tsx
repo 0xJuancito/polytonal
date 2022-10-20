@@ -104,8 +104,10 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
       "Minted NFT": "/actions/mint.svg",
       Received: "/actions/receive.svg",
       "Received NFT": "/actions/receive.svg",
+      "Received HRC1155 NFT": "/actions/receive.svg",
       Sent: "/actions/send.svg",
       "Sent NFT": "/actions/send.svg",
+      "Sent HRC1155 NFT": "/actions/send.svg",
       Swap: "/actions/swap.svg",
       "Swap NFT": "/actions/swap.svg",
       Trade: "/actions/trade.svg",
@@ -122,7 +124,7 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
   const getActionTitle = () => {
     let action = tx.action;
 
-    if (tx.action === "Transfer") {
+    if (tx.action === "Transfer" || tx.action === "TransferSingle") {
       action = sameAddress(tx.recipient.from, tx.address) ? "Sent" : "Received";
 
       if (
@@ -139,7 +141,9 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
         action = "Minted";
       }
 
-      if (tx.nft) {
+      if (tx.action === "TransferSingle") {
+        action += " HRC1155 NFT";
+      } else if (tx.nft) {
         action += " NFT";
       }
     }
@@ -342,7 +346,8 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
           )}
 
           <div className={styles.tokenDetailContainer}>
-            {tx.action === "Transfer" && tx.nft ? (
+            {(tx.action === "Transfer" || tx.action === "TransferSingle") &&
+            tx.nft ? (
               <a
                 className={
                   nftUri ? styles.nftTokenContainer : styles.tokenContainer
