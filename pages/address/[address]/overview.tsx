@@ -20,6 +20,8 @@ const exampleWallets = [
   "0x8D1D23dA965D33C2EBCf49ddaC95e8Da9Ec1fFa7",
   "0x6D95A4341fF6321af10983EDD40D6a333F636258",
   "0xa2c2a7370CD059da2A6e48fD5F7c2CB8cF8Ba778",
+  "0x11Fa8B7017C95Bfa372fdBb4547c07EfDe30FBaC",
+  "0x90FC9647B848e720Cb8Cc95FA44885B370328002",
 ];
 
 export interface IToken {
@@ -162,12 +164,27 @@ const Overview: NextPage = () => {
       console.log(err);
     }
 
+    let fxTxs = [] as any;
+    let fxTokens = [] as any;
+    let fxNfts = [] as any;
+
     fetch(`/api/address/${queryAddress.toLowerCase()}/txs`)
       .then(async (response) => {
         const data = await response.json();
-        setTxs(data.txs);
-        const filtered = filterDates(data.txs) as any;
-        filterDates(data.txs);
+        fxTxs = data.txs;
+        setTxs(fxTxs);
+        const filtered = filterDates(fxTxs) as any;
+        filterDates(fxTxs);
+        if (
+          window.localStorage.getItem((queryAddress as string).toLowerCase())
+        ) {
+          addWallet({
+            address: queryAddress,
+            txs: fxTxs,
+            tokens: fxTokens,
+            nfts: fxNfts,
+          });
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -178,9 +195,20 @@ const Overview: NextPage = () => {
     fetch(`/api/address/${queryAddress.toLowerCase()}/tokens`)
       .then(async (response) => {
         const data = await response.json();
-        setTokens(data.tokens);
-        calculateAndSetWalletValue(data.tokens);
+        fxTokens = data.tokens;
+        setTokens(fxTokens);
+        calculateAndSetWalletValue(fxTokens);
         setLoadingTokens(false);
+        if (
+          window.localStorage.getItem((queryAddress as string).toLowerCase())
+        ) {
+          addWallet({
+            address: queryAddress,
+            txs: fxTxs,
+            tokens: fxTokens,
+            nfts: fxNfts,
+          });
+        }
       })
       .catch((err) => {
         setLoadingTokens(false);
@@ -191,8 +219,19 @@ const Overview: NextPage = () => {
     fetch(`/api/address/${queryAddress.toLowerCase()}/nfts`)
       .then(async (response) => {
         const data = await response.json();
-        setNfts(data.nfts);
+        fxNfts = data.nfts;
+        setNfts(fxNfts);
         setLoadingNfts(false);
+        if (
+          window.localStorage.getItem((queryAddress as string).toLowerCase())
+        ) {
+          addWallet({
+            address: queryAddress,
+            txs: fxTxs,
+            tokens: fxTokens,
+            nfts: fxNfts,
+          });
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -255,7 +294,7 @@ const Overview: NextPage = () => {
     );
   };
 
-  const addWallet = () => {
+  const addWallet = ({ address, txs, tokens, nfts }: any) => {
     const auxWallets = wallets as any;
     if (auxWallets.includes(address.toLowerCase())) {
       return;
@@ -537,7 +576,7 @@ const Overview: NextPage = () => {
                     {
                       (wallets as any).includes(address.toLowerCase())
                         ? removeWallet()
-                        : addWallet();
+                        : addWallet({ address, txs, nfts, tokens });
                     }
                   }}
                 >
