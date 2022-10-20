@@ -252,6 +252,14 @@ const Overview: NextPage = () => {
     filterDates(txs, data);
   };
 
+  const clearFiltersBtn = () => {
+    dispatch({
+      type: "dateChange",
+      payload: { dateStart: null, dateEnd: null },
+    });
+    filterDates(txs, { dateStart: null, dateEnd: null });
+  };
+
   return (
     <div className={styles.page}>
       <ReactNotifications />
@@ -447,16 +455,25 @@ const Overview: NextPage = () => {
             )}
             {!filteredTxs.length && errorWallet ? (
               <div className={styles.errorMessage}>
-                No transactions found with the selected filters
+                {txs?.length ? (
+                  <div>
+                    <div>No transactions found with the selected filters</div>
+                    <button
+                      className={styles.cardAddButton}
+                      onClick={() => clearFiltersBtn()}
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div>No transactions found for this address</div>
+                  </div>
+                )}
               </div>
             ) : (
               ""
             )}
-          </div>
-          <div>
-            <div className={styles.assetsCardContainer}>
-              <AssetsCard></AssetsCard>
-            </div>
           </div>
         </main>
       </div>

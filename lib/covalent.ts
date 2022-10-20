@@ -18,7 +18,7 @@ export interface IHistoryTableResponse {
 export const getTxs = async (
   address: string,
   pageNumber = 0,
-  pageSize = 200
+  pageSize = 1000
 ): Promise<IHistoryTableResponse> => {
   const qsCurrency = `quote-currency=USD`;
   const qsFormat = `format=JSON`;

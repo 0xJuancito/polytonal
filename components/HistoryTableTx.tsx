@@ -116,13 +116,13 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
 
     if (icon) {
       return (
-        <Image
+        <img
           height="32"
           width="32"
           src={icon}
           alt="token"
           className={styles.tokenImage}
-        ></Image>
+        ></img>
       );
     }
 
@@ -267,13 +267,13 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
     >
       <div className={styles.txMainContainer}>
         <div className={styles.actionContainer}>
-          <Image
+          <img
             height="24"
             width="24"
             src={getActionIcon()}
             alt="action"
             className={styles.actionImage}
-          ></Image>
+          ></img>
           <div className={styles.actionDetailContainer}>
             <div className={styles.actionText}>{getActionTitle()}</div>
             <div className={styles.actionTime}>{formatTime()}</div>
