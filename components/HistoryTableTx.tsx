@@ -29,19 +29,31 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
     const contract721 = new HRC721(tx.nft.contractAddress, ABI721, key);
     const contract1155 = new HRC1155(tx.nft.contractAddress, ABI1155, key);
 
-    let url = "";
+    let newNftUri = "";
     if (nftType === "hr721") {
       contract721
         .tokenURI(tx.nft.tokenId)
         .then((uri) => {
-          url = uri;
-          return fetch(uri);
+          newNftUri = uri;
+          if (newNftUri.startsWith("ipfs://")) {
+            newNftUri = newNftUri.replace(
+              "ipfs://",
+              "https://cloudflare-ipfs.com/ipfs/"
+            );
+          }
+          return fetch(newNftUri);
         })
         .then(async (response) => {
           const data = await response.json();
-          const imageUrl = data.image;
+          let imageUrl = data.image as string;
+          if (imageUrl.startsWith("ipfs://")) {
+            imageUrl = imageUrl.replace(
+              "ipfs://",
+              "https://cloudflare-ipfs.com/ipfs/"
+            );
+          }
           if (imageUrl) {
-            setNftUri(url);
+            setNftUri(newNftUri);
             setNftImage(imageUrl);
             setLoadingNft(false);
           }
@@ -53,14 +65,26 @@ const HistoryTableTx: FC<Props> = ({ tx }) => {
       contract1155
         .tokenURI(tx.nft.tokenId)
         .then((uri) => {
-          url = uri;
-          return fetch(uri);
+          newNftUri = uri;
+          if (newNftUri.startsWith("ipfs://")) {
+            newNftUri = newNftUri.replace(
+              "ipfs://",
+              "https://cloudflare-ipfs.com/ipfs/"
+            );
+          }
+          return fetch(newNftUri);
         })
         .then(async (response) => {
           const data = await response.json();
-          const imageUrl = data.image;
+          let imageUrl = data.image as string;
+          if (imageUrl.startsWith("ipfs://")) {
+            imageUrl = imageUrl.replace(
+              "ipfs://",
+              "https://cloudflare-ipfs.com/ipfs/"
+            );
+          }
           if (imageUrl) {
-            setNftUri(url);
+            setNftUri(newNftUri);
             setNftImage(imageUrl);
             setLoadingNft(false);
           }
