@@ -12,6 +12,7 @@ const ConnectWallet: NextPage = () => {
 
   const submitAddress = () => {
     if (!address.length) {
+      router.push("/address/portfolio/overview");
       return;
     }
 
