@@ -40,8 +40,10 @@ export interface INFT {
 }
 
 const initialState = {
-  startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-  endDate: new Date(),
+  // startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  // endDate: new Date(),
+  startDate: null,
+  endDate: null,
   focusedInput: null,
 };
 
